@@ -110,10 +110,10 @@ button { font: inherit; }
 .petal.dust { width: 5px; height: 5px; border-radius: 1px; background: #c4561f; }
 @keyframes fall { to { transform: translate(var(--drift), 110vh) rotate(var(--spin)); } }
 
-.mandala-bg { position: fixed; z-index: 0; pointer-events: none; opacity: 0; width: min(78vmin, 680px); aspect-ratio: 1; }
+.mandala-bg { position: fixed; z-index: 0; pointer-events: none; opacity: 0; width: min(34vmin, 300px); aspect-ratio: 1; }
 .mandala-bg svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 10px 18px rgba(10, 20, 80, .35)); }
-.mandala-bg.left { left: calc(min(78vmin, 680px) * -0.42); bottom: calc(min(78vmin, 680px) * -0.28); }
-.mandala-bg.right { right: calc(min(46vmin, 400px) * -0.6); top: 14vh; width: min(46vmin, 400px); }
+.mandala-bg.left { left: 14px; bottom: 14px; }
+.mandala-bg.right { right: 14px; top: 14px; width: min(24vmin, 210px); }
 
 #music {
   position: fixed; right: 16px; bottom: 16px; z-index: 70;
@@ -196,12 +196,30 @@ section { position: relative; z-index: 1; padding: 80px 16px; text-align: center
 .stage.sky-on .palace { opacity: 1; translate: 0 0; }
 .facade { position: absolute; left: 0; bottom: 0; width: 100%; height: 100%; z-index: 4; transform: translateY(100%); transform-origin: 50% 0; }
 .scroll-cue {
-  position: absolute; left: 50%; bottom: 18px; z-index: 5; transform: translateX(-50%);
-  font-family: "Cinzel", serif; font-size: .62rem; letter-spacing: .3em; text-transform: uppercase; color: #fff3cf;
-  text-shadow: 0 1px 4px rgba(0,0,0,.6); opacity: 0; transition: opacity 1s ease 2.5s;
+  position: absolute; left: 50%; bottom: 28px; z-index: 5; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: #fff3cf; opacity: 0; transition: opacity 1s ease 1.5s; pointer-events: none;
 }
-.scroll-cue::after { content: "⌄"; display: block; font-size: 1.2rem; animation: bob 1.6s ease-in-out infinite; }
 .stage.sky-on .scroll-cue { opacity: 1; }
+.scroll-cue.gone, .stage.sky-on .scroll-cue.gone { opacity: 0; transition-delay: 0s; transition-duration: .4s; }
+.cue-text {
+  font-family: "Cinzel", serif; font-size: .74rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+  background: rgba(74, 11, 21, .85); padding: 9px 18px; border-radius: 30px; border: 1px solid var(--gold);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .3); white-space: nowrap;
+}
+.mouse { width: 26px; height: 42px; border: 2px solid #fff3cf; border-radius: 14px; position: relative; filter: drop-shadow(0 1px 3px rgba(0,0,0,.6)); }
+.mouse i { position: absolute; left: 50%; top: 7px; width: 4px; height: 8px; margin-left: -2px; border-radius: 2px; background: #fff3cf; animation: wheel 1.6s ease-in-out infinite; }
+@keyframes wheel { 0% { opacity: 1; transform: none; } 80% { opacity: 0; transform: translateY(14px); } 100% { opacity: 0; } }
+.chev { font-size: 1.8rem; line-height: .6; text-shadow: 0 1px 4px rgba(0,0,0,.6); animation: bob 1.4s ease-in-out infinite; }
+@media (hover: none) { .mouse { border-radius: 50%; width: 30px; height: 30px; } .mouse i { top: 50%; margin-top: -4px; height: 8px; animation: swipe 1.6s ease-in-out infinite; } }
+@keyframes swipe { 0% { opacity: 0; transform: translateY(10px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-14px); } }
+#nextBtn {
+  position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); z-index: 70; transform: translate(-50%, 30px);
+  display: flex; align-items: center; gap: 6px; border: 0; background: none; padding: 0; cursor: pointer;
+  color: var(--gold-light); opacity: 0; pointer-events: none; transition: opacity .5s, transform .5s;
+}
+#nextBtn.show { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
+#nextBtn .chev { color: var(--maroon); text-shadow: none; }
 @keyframes bob { 50% { transform: translateY(6px); } }
 
 /* ================= 3. Jharokha ================= */
@@ -333,35 +351,7 @@ section { position: relative; z-index: 1; padding: 80px 16px; text-align: center
 .parchment li::before { content: "✦ "; color: var(--gold); font-size: .7rem; }
 .parchment a { display: inline-block; margin-top: 8px; font-family: "Cinzel", serif; font-size: .6rem; letter-spacing: .15em; color: var(--maroon-deep); background: var(--gold-light); padding: 4px 12px; border-radius: 20px; text-decoration: none; }
 
-/* ================= 9. Gallery ================= */
-.carousel { position: relative; max-width: 900px; margin: 0 auto; }
-.track { position: relative; height: clamp(380px, 95vw, 480px); touch-action: pan-y; perspective: 1200px; }
-.slide {
-  position: absolute; left: 50%; top: 34px; width: clamp(200px, 58vw, 270px); aspect-ratio: 3 / 4.2;
-  padding: 14px; border-radius: 50% 50% 12px 12px / 30% 30% 12px 12px;
-  background: linear-gradient(145deg, #fff0b3, #d4a640 40%, #9c7425 70%, #f0cf7a);
-  box-shadow: 0 20px 40px rgba(60, 30, 10, .35);
-  transition: transform .9s cubic-bezier(.4, 0, .2, 1), opacity .9s, filter .9s; cursor: pointer;
-}
-.slide::before { /* crown */
-  content: ""; position: absolute; top: -30px; left: 50%; width: 70px; height: 36px; transform: translateX(-50%);
-  border-radius: 50% 50% 0 0 / 100% 100% 0 0; background: linear-gradient(#fff0b3, #c8962e 70%, #8a6420);
-}
-.slide::after { /* gems */
-  content: ""; position: absolute; inset: 4px; border-radius: inherit; pointer-events: none;
-  border: 4px dotted #c0182e; opacity: .85;
-}
-.slide .gem { position: absolute; top: -40px; left: 50%; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ff7b8a, #b0102a 60%); border: 2px solid #f0cf7a; z-index: 2; }
-.slide .pic { width: 100%; height: 100%; border-radius: 50% 50% 6px 6px / 28% 28% 6px 6px; overflow: hidden; border: 3px solid #7a5418; background-size: cover; background-position: center; background-color: #6d0f1f; }
-.slide .pic.ph { background-image: radial-gradient(circle at 50% 35%, rgba(255, 220, 150, .45), transparent 60%), linear-gradient(#2d1640, #a5483a 60%, #f0a050); }
-.ribbon { display: inline-block; margin-top: 8px; background: var(--maroon); color: var(--gold-light); font-family: "Great Vibes", cursive; font-size: 1.5rem; padding: 2px 36px; clip-path: polygon(0 0, 100% 0, 94% 50%, 100% 100%, 0 100%, 6% 50%); }
-.thumbs { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 14px; }
-.thumb-row { display: flex; gap: 6px; }
-.thumb-row button { width: 26px; height: 34px; border: 2px solid var(--gold); border-radius: 50% 50% 3px 3px / 40% 40% 3px 3px; background: linear-gradient(#e9c46a, #b8862e); background-size: cover; background-position: center; cursor: pointer; opacity: .6; transition: opacity .3s, transform .3s; }
-.thumb-row button.on { opacity: 1; transform: translateY(-4px); border-color: var(--maroon); }
-.nav { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--gold); background: var(--maroon); color: var(--gold-light); cursor: pointer; line-height: 1; font-size: 1.2rem; }
-
-/* ================= 10. Venue / royal card ================= */
+/* ================= 9. Venue / royal card ================= */
 .royal-card {
   position: relative; max-width: 860px; margin: 0 auto; border-radius: 12px; color: var(--gold-light);
   background: radial-gradient(ellipse at 30% 20%, #9a1f33, #5a0c19 75%);
@@ -371,6 +361,9 @@ section { position: relative; z-index: 1; padding: 80px 16px; text-align: center
 .royal-card::before, .royal-card::after { content: ""; position: absolute; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ff7b8a, #b0102a); border: 2px solid var(--gold); }
 .royal-card::before { top: -8px; left: -8px; } .royal-card::after { bottom: -8px; right: -8px; }
 .venue-card { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: center; }
+.venue-card .map { grid-column: 1 / -1; }
+.venue-photo { border: 3px solid var(--gold); border-radius: 50% 50% 10px 10px / 22% 22% 10px 10px; overflow: hidden; aspect-ratio: 4 / 4.2; box-shadow: 0 10px 24px rgba(0, 0, 0, .35); }
+.venue-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .join { font-size: 1.8rem; color: var(--gold); line-height: 1; }
 .venue-name { font-size: clamp(1.5rem, 5vw, 2.1rem); color: #ffe7a6; line-height: 1.15; margin: 4px 0 16px; }
 .facts { list-style: none; display: grid; gap: 12px; margin-bottom: 14px; }
@@ -383,31 +376,7 @@ section { position: relative; z-index: 1; padding: 80px 16px; text-align: center
 .gold-btn.wide { width: 100%; }
 .maroon-btn { border: 0; cursor: pointer; background: var(--maroon); color: #fff; font-family: "Cinzel", serif; letter-spacing: .1em; padding: 11px 20px; border-radius: 30px; width: 100%; font-size: .8rem; }
 
-/* ================= 11. RSVP ================= */
-.rsvp-card { max-width: 440px; display: grid; gap: 14px; padding-top: 50px; margin-top: 40px; text-align: center; }
-.seal { position: absolute; top: -34px; left: 50%; transform: translateX(-50%); width: 68px; height: 68px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 35% 35%, #c6313f, #7b1424 70%); border: 3px solid var(--gold); font-family: "Great Vibes", cursive; font-size: 1.7rem; color: var(--gold-light); }
-.will { font-size: 2rem; color: var(--gold-light); line-height: 1; }
-.gold-text { color: var(--gold); margin-top: -8px; }
-.field { display: block; text-align: left; font-family: "Cinzel", serif; font-size: .64rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); }
-.field input { display: block; width: 100%; margin-top: 6px; padding: 11px 14px; border-radius: 8px; border: 1px solid rgba(212, 166, 64, .6); background: rgba(0, 0, 0, .2); color: #fff4d6; font-family: "Cormorant Garamond", serif; font-size: 1.05rem; }
-.field input::placeholder { color: rgba(255, 244, 214, .5); }
-.choice { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.opt { border: 1px solid var(--gold); border-radius: 10px; padding: 12px 8px; background: transparent; color: var(--gold-light); cursor: pointer; font-family: "Cinzel", serif; font-size: .68rem; letter-spacing: .08em; transition: background .3s, color .3s; }
-.opt.on { background: linear-gradient(#fff0b3, #d4a640 55%, #b88a2e); color: var(--maroon-deep); font-weight: 600; }
-.guests { display: flex; align-items: center; justify-content: space-between; }
-.stepper { display: flex; align-items: center; gap: 12px; }
-.stepper button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); background: rgba(0,0,0,.2); color: var(--gold-light); cursor: pointer; font-size: 1.1rem; }
-.stepper output { font-family: "Cinzel", serif; font-size: 1.1rem; color: #fff4d6; min-width: 20px; text-align: center; }
-
-/* ================= 12. Wishes ================= */
-.wishes-card { max-width: 620px; }
-.wish-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 18px 0; text-align: left; }
-.wish { background: #fff; border: 1px solid #f0e2c6; border-radius: 10px; padding: 14px; font-style: italic; }
-.wish small { display: block; font-style: normal; color: var(--muted); margin-top: 6px; font-size: .85rem; }
-.wish-form { display: grid; gap: 10px; }
-.wish-form input, .wish-form textarea { width: 100%; padding: 10px 12px; border: 1px solid #ead9b8; border-radius: 8px; font-family: inherit; font-size: 1rem; background: #fff; }
-
-/* ================= 13. Closing ================= */
+/* ================= 10. Closing ================= */
 #closing { padding-bottom: 30px; }
 .closing-names { font-size: clamp(1.8rem, 8vw, 3.2rem); color: var(--maroon); }
 .hashtag { font-family: "Cinzel", serif; letter-spacing: .14em; color: var(--gold-dark); font-size: .9rem; }
@@ -426,6 +395,10 @@ section { position: relative; z-index: 1; padding: 80px 16px; text-align: center
   body { font-size: 17px; }
   section { padding: 64px 16px; }
   .venue-card { grid-template-columns: 1fr; }
+  .venue-photo { aspect-ratio: 4 / 3.4; }
+  .mandala-bg { width: 30vw; }
+  .mandala-bg.right { width: 22vw; top: 10px; right: 10px; }
+  .mandala-bg.left { left: 10px; bottom: 10px; }
   .lamp-string, .lamp { left: 18px; }
   .event-row { grid-template-columns: 1fr; gap: 8px; padding: 26px 0 26px 46px; }
   .event-row .scroll, .event-row.alt .scroll { order: 2; }

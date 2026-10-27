@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Wedding Invitation</title>
 <meta name="description" content="A royal wedding invitation. Tap to open the palace gates.">
 <meta name="theme-color" content="#4a0b15">
@@ -43,6 +43,7 @@
 <div class="mandala-bg left" aria-hidden="true"></div>
 <div class="mandala-bg right" aria-hidden="true"></div>
 <button id="music" aria-label="Toggle music" hidden>♫</button>
+<button id="nextBtn" type="button" aria-label="Scroll down"><span class="cue-text">Scroll down</span> <span class="chev">⌄</span></button>
 <audio id="bgm" loop preload="none"></audio>
 
 <main>
@@ -58,7 +59,7 @@
       </div>
       <svg class="palace" id="palaceSvg" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
       <svg class="facade" id="facadeSvg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
-      <p class="scroll-cue">Scroll</p>
+      <div class="scroll-cue"><span class="mouse" aria-hidden="true"><i></i></span><span class="cue-text">Scroll down to continue</span><span class="chev" aria-hidden="true">⌄</span></div>
     </div>
   </section>
 
@@ -170,28 +171,13 @@
     </div>
   </section>
 
-  <!-- 9. Gallery -->
-  <section id="gallery">
-    <p class="script heading-script px">Moments to treasure</p>
-    <h2 class="cinzel title px">Royal Gallery</h2>
-    <div class="ornament px"></div>
-    <div class="carousel px" id="carousel">
-      <div class="track" id="track"></div>
-      <div class="ribbon" id="caption"></div>
-      <div class="thumbs">
-        <button class="nav" id="prev" aria-label="Previous photo">‹</button>
-        <div class="thumb-row" id="thumbs"></div>
-        <button class="nav" id="next" aria-label="Next photo">›</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- 10. Venue -->
+  <!-- 9. Venue -->
   <section id="venue">
     <p class="script heading-script px">Where hearts unite</p>
     <h2 class="cinzel title px">The Venue</h2>
     <div class="ornament px"></div>
     <div class="royal-card venue-card px" data-flat>
+      <div class="venue-photo"><img id="venuePhoto" alt="" loading="lazy"></div>
       <div class="venue-info">
         <p class="script join">Join us at</p>
         <h3 class="cinzel venue-name" data-cfg="venueName"></h3>
@@ -207,41 +193,7 @@
     </div>
   </section>
 
-  <!-- 11. RSVP -->
-  <section id="rsvp">
-    <p class="script heading-script px">Kindly respond</p>
-    <h2 class="cinzel title px">RSVP</h2>
-    <div class="ornament px"></div>
-    <form class="royal-card rsvp-card px" id="rsvpForm" data-flat>
-      <div class="seal" aria-hidden="true" data-cfg="initials"></div>
-      <p class="script will">Will you join us?</p>
-      <p class="small-caps gold-text" data-cfg="dateShort"></p>
-      <label class="field">Your name<input name="name" required autocomplete="name" placeholder="Full name"></label>
-      <div class="choice" role="radiogroup" aria-label="Will you attend?">
-        <button type="button" class="opt on" data-v="Joyfully accepts">♥ Joyfully Accept</button>
-        <button type="button" class="opt" data-v="Regretfully declines">Regretfully Decline</button>
-      </div>
-      <div class="field guests">Number of guests
-        <div class="stepper"><button type="button" id="minus" aria-label="Fewer guests">−</button><output id="guests">1</output><button type="button" id="plus" aria-label="More guests">+</button></div>
-      </div>
-      <button class="gold-btn wide" type="submit">Send RSVP</button>
-    </form>
-  </section>
-
-  <!-- 12. Wishes wall -->
-  <section id="wishes">
-    <div class="paper-card wishes-card px">
-      <h2 class="cinzel">Wishes Wall</h2>
-      <div class="wish-list" id="wishList"></div>
-      <form id="wishForm" class="wish-form">
-        <input name="from" placeholder="Your name" required>
-        <textarea name="text" rows="2" placeholder="Leave a wish for the couple" required></textarea>
-        <button class="maroon-btn" type="submit">♥ Leave a Wish</button>
-      </form>
-    </div>
-  </section>
-
-  <!-- 13. Closing -->
+  <!-- 10. Closing -->
   <section id="closing">
     <div class="medallion px" aria-hidden="true"></div>
     <p class="script heading-script px">We await your gracious presence</p>

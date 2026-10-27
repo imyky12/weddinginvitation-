@@ -51,23 +51,18 @@ window.WEDDING = {
   events: [
     { name: "Tilakotsav", hindi: "शुभ तिलकोत्सव एवं स्नेहिल प्रीतिभोज", note: "Tilak & Preetibhoj", date: "18 Nov 2026", day: "Wednesday", time: "7:00 PM", venue: "Azad Marriage Lawn, Badarka, Unnao", map: "Azad Marriage Lawn Unnao" },
     { name: "Matru Poojan", hindi: "मातृ पूजन", note: "Blessings of the mothers", date: "23 Nov 2026", day: "Monday", time: "", venue: "Jagjeevanpur (Rawal Kalan), Unnao" },
-    { name: "Shubh Vivah", hindi: "शुभ विवाह", note: "Baraat departs at 6:00 PM", date: "24 Nov 2026", day: "Tuesday", time: "6:00 PM", venue: "Saubhagya Shri Palace, Marhala Chauraha, Shuklaganj", map: "Saubhagya Shri Palace Shuklaganj Unnao" },
+    { name: "Shubh Vivah", hindi: "शुभ विवाह", note: "Baraat departs at 6:00 PM", date: "24 Nov 2026", day: "Tuesday", time: "6:00 PM", venue: "Saubhagya Shree Palace & Lawn, Shuklaganj", map: "https://maps.app.goo.gl/egGA2azzSfdMTwxN8" },
     { name: "Vadhu Aagman", hindi: "वधू आगमन", note: "Welcoming the bride home", date: "25 Nov 2026", day: "Wednesday", time: "", venue: "Jagjeevanpur (Rawal Kalan), Unnao" }
   ],
 
-  gallery: [
-    { src: "images/gallery-1.jpg", caption: "The Tilak" },
-    { src: "images/gallery-2.jpg", caption: "The Haldi" },
-    { src: "images/gallery-3.jpg", caption: "The Wedding Mandap" },
-    { src: "images/gallery-4.jpg", caption: "The Pheras" },
-    { src: "images/gallery-5.jpg", caption: "Together Forever" }
-  ],
-
   venue: {
-    name: "Saubhagya Shri Palace",
+    name: "Saubhagya Shree Palace & Lawn",
     address: "Near Marhala Chauraha, Shuklaganj, Unnao",
     note: "The Baraat departs at 6:00 PM from our home in Jagjeevanpur (Rawal Kalan), Unnao.",
-    mapQuery: "Saubhagya Shri Palace Shuklaganj Unnao"
+    mapLink: "https://maps.app.goo.gl/egGA2azzSfdMTwxN8",
+    lat: 26.4885625,
+    lng: 80.4075625,
+    photo: "images/venue.jpg"
   },
 
   hosts: {
@@ -78,14 +73,6 @@ window.WEDDING = {
       { name: "Dr. Narsingh Kakutsth", phone: "9554305725" }
     ]
   },
-
-  // RSVPs and wishes are sent on WhatsApp to this number (country code, no "+")
-  whatsapp: "919415934508",
-
-  wishes: [
-    { text: "Wishing Vikas and Avika a lifetime of love, laughter and togetherness.", from: "Kakutsth Parivar" },
-    { text: "May Lord Ganesha bless the new journey of the couple.", from: "Charan Medical Store, Rawal Kalan" }
-  ],
 
   // Background music, e.g. "music/song.mp3" — leave "" for none
   music: ""

@@ -68,7 +68,7 @@
       for (let i = 0; i < n; i++) s += `<ellipse cx="0" cy="${-radius}" rx="${4 + r * 1.3}" ry="${7 + r * 1.6}" fill="${c}" stroke="${colors[(r + 2) % colors.length]}" stroke-width=".8" transform="rotate(${360 * i / n})"/>`;
       s += `<circle r="${radius - 6}" fill="none" stroke="${colors[(r + 1) % colors.length]}" stroke-width="1" stroke-dasharray="2 3"/>`;
     }
-    return `<svg viewBox="-100 -100 200 200">${s}<circle r="9" fill="${colors[0]}" stroke="${colors[3]}" stroke-width="2"/></svg>`;
+    return `<svg viewBox="-114 -114 228 228">${s}<circle r="9" fill="${colors[0]}" stroke="${colors[3]}" stroke-width="2"/></svg>`;
   }
   const blues = ["#0b1f6e", "#1f4fb8", "#3a8dde", "#5cc8f0", "#122d8f", "#2a6fd6"];
   $$(".mandala-bg").forEach(el => (el.innerHTML = mandala(blues)));
@@ -255,7 +255,7 @@
             <h3>${e.name.toUpperCase()}</h3>
             ${e.note ? `<p class="note">${e.note}</p>` : ""}
             <ul><li>${e.day ? e.day + ", " : ""}${e.date}</li>${e.time ? `<li>${e.time}</li>` : ""}<li>${e.venue}</li></ul>
-            ${e.map ? `<a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.map)}">View Map</a>` : ""}
+            ${e.map ? `<a target="_blank" rel="noopener" href="${e.map.startsWith("http") ? e.map : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.map)}`}">View Map</a>` : ""}
           </div>
           <div class="rod"></div>
         </div>
@@ -264,53 +264,12 @@
     </div>`).join(""));
   const rows = $$(".event-row").map(r => ({ row: r, scroll: r.querySelector(".scroll"), body: r.querySelector(".scroll-body"), date: r.querySelector(".edate"), alt: r.classList.contains("alt") }));
 
-  /* ---------- Gallery ---------- */
-  const track = $("#track"), thumbs = $("#thumbs"), caption = $("#caption");
-  track.innerHTML = W.gallery.map(() => `<div class="slide"><span class="gem"></span><div class="pic ph"></div></div>`).join("");
-  thumbs.innerHTML = W.gallery.map((g, i) => `<button aria-label="Photo ${i + 1}"></button>`).join("");
-  const slides = $$(".slide"), thumbBtns = [...thumbs.children];
-  W.gallery.forEach((g, i) => {
-    const img = new Image();
-    img.onload = () => {
-      const p = slides[i].querySelector(".pic");
-      p.style.backgroundImage = thumbBtns[i].style.backgroundImage = `url("${g.src}")`;
-      p.classList.remove("ph");
-    };
-    img.src = g.src;
-  });
-  let cur = 0, auto;
-  function show(n) {
-    const len = slides.length;
-    cur = (n + len) % len;
-    slides.forEach((s, i) => {
-      let d = i - cur;
-      if (d > len / 2) d -= len;
-      if (d < -len / 2) d += len;
-      const a = Math.abs(d);
-      s.style.transform = `translateX(${-50 + d * 78}%) scale(${a ? 0.8 : 1}) rotateY(${-d * 24}deg)`;
-      s.style.opacity = a > 1 ? 0 : a ? 0.8 : 1;
-      s.style.zIndex = 10 - a;
-      s.style.filter = a ? "brightness(.75)" : "none";
-      s.style.pointerEvents = a > 1 ? "none" : "auto";
-    });
-    thumbBtns.forEach((b, i) => b.classList.toggle("on", i === cur));
-    caption.textContent = W.gallery[cur].caption || "";
-  }
-  const restart = () => { clearInterval(auto); auto = setInterval(() => show(cur + 1), 4000); };
-  const go = n => { show(n); restart(); };
-  slides.forEach((s, i) => s.addEventListener("click", () => go(i)));
-  thumbBtns.forEach((b, i) => b.addEventListener("click", () => go(i)));
-  $("#prev").addEventListener("click", () => go(cur - 1));
-  $("#next").addEventListener("click", () => go(cur + 1));
-  let sx = null;
-  track.addEventListener("pointerdown", e => (sx = e.clientX));
-  track.addEventListener("pointerup", e => { if (sx !== null && Math.abs(e.clientX - sx) > 40) go(cur + (e.clientX < sx ? 1 : -1)); sx = null; });
-  show(0); restart();
-
   /* ---------- Venue + contacts ---------- */
-  const q = encodeURIComponent(W.venue.mapQuery || `${W.venue.name} ${W.venue.address}`);
-  $("#map").src = `https://www.google.com/maps?q=${q}&output=embed`;
-  $("#directions").href = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
+  const v = W.venue, q = v.lat ? `${v.lat},${v.lng}` : encodeURIComponent(`${v.name} ${v.address}`);
+  $("#map").src = `https://www.google.com/maps?q=${q}&z=16&output=embed`;
+  $("#directions").href = v.mapLink || `https://www.google.com/maps/dir/?api=1&destination=${q}`;
+  const vp = $("#venuePhoto");
+  if (v.photo) { vp.src = v.photo; vp.alt = `Entrance of ${v.name}`; } else vp.parentElement.remove();
   $("#contacts").innerHTML = (W.hosts?.contacts || []).map(c => `<a href="tel:+91${c.phone}">☎ ${c.name} · ${c.phone}</a>`).join("");
 
   /* ---------- Countdown ---------- */
@@ -396,32 +355,6 @@
   document.fonts.ready.then(paintScratch);
   addEventListener("resize", () => { if (!scratched) paintScratch(); });
 
-  /* ---------- RSVP + wishes (WhatsApp) ---------- */
-  const wa = text => window.open(`https://wa.me/${W.whatsapp}?text=${encodeURIComponent(text)}`, "_blank");
-  let attending = "Joyfully accepts", guests = 1;
-  $$(".opt").forEach(b => b.addEventListener("click", () => {
-    $$(".opt").forEach(o => o.classList.toggle("on", o === b));
-    attending = b.dataset.v;
-  }));
-  const setGuests = n => { guests = clamp(n, 1, 20); $("#guests").textContent = guests; };
-  $("#minus").addEventListener("click", () => setGuests(guests - 1));
-  $("#plus").addEventListener("click", () => setGuests(guests + 1));
-  $("#rsvpForm").addEventListener("submit", e => {
-    e.preventDefault();
-    const name = new FormData(e.target).get("name");
-    wa(`RSVP for ${W.groom} & ${W.bride}'s wedding\nName: ${name}\nGuests: ${guests}\nResponse: ${attending}`);
-  });
-  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const wishHtml = w => `<div class="wish">“${esc(w.text)}”<small>— ${esc(w.from)}</small></div>`;
-  $("#wishList").innerHTML = W.wishes.map(wishHtml).join("");
-  $("#wishForm").addEventListener("submit", e => {
-    e.preventDefault();
-    const f = new FormData(e.target), w = { from: f.get("from"), text: f.get("text") };
-    $("#wishList").insertAdjacentHTML("afterbegin", wishHtml(w));
-    wa(`A wish for ${W.groom} & ${W.bride} 💐\n"${w.text}"\n— ${w.from}`);
-    e.target.reset();
-  });
-
   /* ---------- Scroll-driven parallax ---------- */
   const hero = $("#hero"), stage = $(".stage"), heroText = $(".hero-text"), sky = $(".sky"),
     palace = $("#palaceSvg"), facade = $("#facadeSvg"), cue = $(".scroll-cue"),
@@ -458,13 +391,11 @@
     palace.style.transform = `translateY(${-p * 16}vh) scale(${1 + p * 2.2})`;
     const f = ease(clamp((p - 0.28) / 0.62));
     facade.style.transform = `translateY(${(1 - f) * 100}%) scale(${1.3 - 0.3 * f})`;
-    cue.style.transform = `translateX(-50%) translateY(${p * 40}px)`;
-    cue.style.visibility = p > 0.1 ? "hidden" : "visible";
+    cue.classList.toggle("gone", p > 0.04);
 
     // Mandalas turn with the scroll
     const m = clamp((p - 0.8) / 0.2), sy = scrollY;
-    mandL.style.opacity = m * (mobile ? 0.45 : 0.95);
-    mandR.style.opacity = m * (mobile ? 0.5 : 0.95);
+    mandL.style.opacity = mandR.style.opacity = m * (mobile ? 0.4 : 0.95);
     mandL.style.transform = `rotate(${sy * 0.05}deg) scale(${0.85 + m * 0.15})`;
     mandR.style.transform = `rotate(${-sy * 0.07}deg) scale(${0.85 + m * 0.15})`;
     medallions.forEach(s => (s.style.transform = `rotate(${sy * 0.2}deg)`));
@@ -498,6 +429,28 @@
     const dq = clamp((vh - dr.top) / dr.height);
     dLayers.forEach((l, i) => (l.style.transform = `translateY(${(1 - dq) * dr.height * [0.12, 0.32, 0.6][i]}px)`));
   }
+  // Guide guests who don't realise they should scroll
+  const nextBtn = $("#nextBtn");
+  let idle, userScrolled = false, autoScrolling = false;
+  function armIdle() {
+    nextBtn.classList.remove("show");
+    clearTimeout(idle);
+    idle = setTimeout(() => {
+      const atEnd = innerHeight + scrollY >= document.documentElement.scrollHeight - 40;
+      const heroCueVisible = !cue.classList.contains("gone");
+      if (!document.body.classList.contains("locked") && !atEnd && !heroCueVisible) nextBtn.classList.add("show");
+    }, 3500);
+  }
+  nextBtn.addEventListener("click", () => scrollBy({ top: innerHeight * 0.8, behavior: "smooth" }));
+  addEventListener("scroll", () => { if (!autoScrolling) userScrolled = true; armIdle(); }, { passive: true });
+  addEventListener("pointerdown", armIdle);
+  function demoNudge() {
+    if (userScrolled || reduceMotion) return;
+    autoScrolling = true;
+    scrollTo({ top: innerHeight * 0.45, behavior: "smooth" });
+    setTimeout(() => (autoScrolling = false), 1500);
+  }
+
   let ticking = false;
   const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { update(); ticking = false; }); } };
   addEventListener("scroll", onScroll, { passive: true });
@@ -526,6 +479,8 @@
       paintScratch();
     }, 2400 * t);
     setTimeout(() => stage.classList.add("sky-on"), 5400 * t);
+    setTimeout(demoNudge, 10500 * t);
+    setTimeout(armIdle, 9000 * t);
     setTimeout(() => {
       gate.remove();
       petalBurst(26);
