@@ -361,7 +361,6 @@ section { position: relative; z-index: 1; padding: 80px 16px; text-align: center
 .royal-card::before, .royal-card::after { content: ""; position: absolute; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ff7b8a, #b0102a); border: 2px solid var(--gold); }
 .royal-card::before { top: -8px; left: -8px; } .royal-card::after { bottom: -8px; right: -8px; }
 .venue-card { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: center; }
-.venue-card .map { grid-column: 1 / -1; }
 .venue-photo { border: 3px solid var(--gold); border-radius: 50% 50% 10px 10px / 22% 22% 10px 10px; overflow: hidden; aspect-ratio: 4 / 4.2; box-shadow: 0 10px 24px rgba(0, 0, 0, .35); }
 .venue-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .join { font-size: 1.8rem; color: var(--gold); line-height: 1; }
@@ -408,6 +407,8 @@ section { position: relative; z-index: 1; padding: 80px 16px; text-align: center
   .couple-grid { grid-template-columns: minmax(0, 300px); }
   .member { width: 140px; }
 }
+/* The gate and scroll animations are the invitation itself, so they always play;
+   only the looping background effects stop for people who reduce motion */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation: none !important; transition-duration: .01s !important; transition-delay: 0s !important; }
+  .cloud, .lamp svg, .caravan, .gate-tap, .mouse i, .chev, #music.playing { animation: none; }
 }

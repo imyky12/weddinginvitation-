@@ -266,7 +266,6 @@
 
   /* ---------- Venue + contacts ---------- */
   const v = W.venue, q = v.lat ? `${v.lat},${v.lng}` : encodeURIComponent(`${v.name} ${v.address}`);
-  $("#map").src = `https://www.google.com/maps?q=${q}&z=16&output=embed`;
   $("#directions").href = v.mapLink || `https://www.google.com/maps/dir/?api=1&destination=${q}`;
   const vp = $("#venuePhoto");
   if (v.photo) { vp.src = v.photo; vp.alt = `Entrance of ${v.name}`; } else vp.parentElement.remove();
@@ -445,7 +444,7 @@
   addEventListener("scroll", () => { if (!autoScrolling) userScrolled = true; armIdle(); }, { passive: true });
   addEventListener("pointerdown", armIdle);
   function demoNudge() {
-    if (userScrolled || reduceMotion) return;
+    if (userScrolled) return;
     autoScrolling = true;
     scrollTo({ top: innerHeight * 0.45, behavior: "smooth" });
     setTimeout(() => (autoScrolling = false), 1500);
@@ -471,21 +470,20 @@
     if (gate.classList.contains("open")) return;
     gate.classList.add("open");
     if (W.music) audio.play().then(() => musicBtn.classList.add("playing")).catch(() => {});
-    const t = reduceMotion ? 0 : 1;
     setTimeout(() => {
       scrollTo(0, 0);
       document.body.classList.remove("locked");
       stage.classList.add("play");
       paintScratch();
-    }, 2400 * t);
-    setTimeout(() => stage.classList.add("sky-on"), 5400 * t);
-    setTimeout(demoNudge, 10500 * t);
-    setTimeout(armIdle, 9000 * t);
+    }, 2400);
+    setTimeout(() => stage.classList.add("sky-on"), 5400);
+    setTimeout(demoNudge, 10500);
+    setTimeout(armIdle, 9000);
     setTimeout(() => {
       gate.remove();
       petalBurst(26);
       setInterval(() => petalBurst(2), 3000);
-    }, 3700 * t);
+    }, 3700);
   }
   gate.addEventListener("click", openGate);
   gate.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openGate(); } });
