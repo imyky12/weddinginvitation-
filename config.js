@@ -18,6 +18,7 @@ window.WEDDING = {
   weddingDate: "2026-11-24T18:00:00",
   dateLong: "Tuesday, 24 November 2026",
   dateShort: "24 November 2026",
+  dateHindi: "मंगलवार, 24 नवम्बर 2026",
   timeText: "Baraat departs at 6:00 PM",
 
   shloka: "वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ ।\nनिर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥",

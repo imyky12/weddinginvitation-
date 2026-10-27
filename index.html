@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Wedding Invitation</title>
-<meta name="description" content="A royal wedding invitation. Tap to open the palace gates.">
+<meta name="description" content="शुभ विवाह — an invitation to the wedding. Tap to open the gates.">
 <meta name="theme-color" content="#4a0b15">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Rozha+One&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="locked">
@@ -19,11 +19,11 @@
   </clipPath>
 </svg>
 
-<!-- 1. Palace gate -->
+<!-- 1. Awadhi gate -->
 <div id="gate" role="button" tabindex="0" aria-label="Tap to open the invitation">
   <div class="gate-scene">
     <div class="mural-arch">
-      <svg class="peacocks" viewBox="40 0 520 240" aria-hidden="true" id="peacockSvg"></svg>
+      <svg class="gate-art" id="gateArt" viewBox="0 0 500 600" preserveAspectRatio="none" aria-hidden="true"></svg>
       <div class="door-frame"></div>
       <div class="doorway">
         <div class="glow"></div>
@@ -31,11 +31,11 @@
         <div class="door right"><span class="knocker"></span></div>
       </div>
       <div class="gate-label">
-        <p class="small-caps">The wedding of</p>
+        <p class="hindi gate-hi">॥ शुभ विवाह ॥</p>
         <p class="gate-names" data-cfg="coupleShort"></p>
       </div>
     </div>
-    <p class="gate-tap">Tap to open the gates</p>
+    <p class="gate-tap"><span class="hindi">द्वार खोलें</span> · Tap to open</p>
   </div>
 </div>
 
@@ -47,28 +47,29 @@
 <audio id="bgm" loop preload="none"></audio>
 
 <main>
-  <!-- 2. Names, sunset palace, zoom into the haveli (pinned while scrolling) -->
+  <!-- 2. Names over the Ganga ghat, zoom into the Awadhi palace (pinned while scrolling) -->
   <section id="hero">
     <div class="stage">
       <div class="sky"><i class="cloud c1"></i><i class="cloud c2"></i><i class="cloud c3"></i><i class="cloud c4"></i></div>
       <div class="sun"></div>
       <div class="hero-text">
-        <p class="script small-script">Shubh Vivah</p>
+        <p class="hindi small-script">॥ शुभ विवाह ॥</p>
         <h1 class="names-a"><span data-cfg="groom"></span><span class="script amp">&amp;</span><span data-cfg="bride"></span></h1>
-        <h1 class="names-b" aria-hidden="true"><span data-cfg="groomCaps"></span><span class="script amp">&amp;</span><span data-cfg="brideCaps"></span></h1>
+        <h1 class="names-b" aria-hidden="true"><span data-cfg="groomCaps"></span><span class="script amp">&amp;</span><span data-cfg="brideCaps"></span><span class="hi-names" data-cfg="coupleHindi"></span></h1>
       </div>
       <svg class="palace" id="palaceSvg" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
       <svg class="facade" id="facadeSvg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
-      <div class="scroll-cue"><span class="mouse" aria-hidden="true"><i></i></span><span class="cue-text">Scroll down to continue</span><span class="chev" aria-hidden="true">⌄</span></div>
+      <div class="scroll-cue"><span class="mouse" aria-hidden="true"><i></i></span><span class="cue-text"><span class="hindi">नीचे स्क्रॉल करें</span> · Scroll down</span><span class="chev" aria-hidden="true">⌄</span></div>
     </div>
   </section>
 
-  <!-- 3. Jharokha date reveal -->
+  <!-- 3. Arched window date reveal -->
   <section id="date">
-    <div class="jharokha j-orange wide px" data-open>
+    <div class="jharokha j-maroon wide px" data-open>
       <div class="j-top"><span class="lotus"></span><span class="lotus"></span></div>
       <div class="j-window">
         <div class="j-content date-card">
+          <p class="hindi date-hi" data-cfg="dateHindi"></p>
           <p class="cinzel" data-cfg="dateLong"></p>
           <p class="small-caps" data-cfg="venueName"></p>
         </div>
@@ -82,24 +83,28 @@
     <div class="medallion px" aria-hidden="true"></div>
     <p class="hindi ganesh px">॥ श्री गणेशाय नमः ॥</p>
     <p class="hindi shloka px" data-cfg="shloka"></p>
+    <h2 class="hi-title px">सादर आमंत्रण</h2>
     <p class="script heading-script px">Together with their families</p>
     <p class="invite-text words" data-cfg="invitationText"></p>
+    <h2 class="hi-title sm px">शुभ घड़ी की प्रतीक्षा</h2>
     <p class="script heading-script px">Counting the moments</p>
     <div class="countdown">
-      <div class="tile t1 px"><div class="t-in"><span id="cd-d">00</span></div><small>Days</small></div>
-      <div class="tile t2 px"><div class="t-in"><span id="cd-h">00</span></div><small>Hours</small></div>
-      <div class="tile t3 px"><div class="t-in"><span id="cd-m">00</span></div><small>Minutes</small></div>
-      <div class="tile t4 px"><div class="t-in"><span id="cd-s">00</span></div><small>Seconds</small></div>
+      <div class="tile t1 px"><div class="t-in"><span id="cd-d">00</span></div><small><b class="hindi">दिन</b>Days</small></div>
+      <div class="tile t2 px"><div class="t-in"><span id="cd-h">00</span></div><small><b class="hindi">घंटे</b>Hours</small></div>
+      <div class="tile t3 px"><div class="t-in"><span id="cd-m">00</span></div><small><b class="hindi">मिनट</b>Minutes</small></div>
+      <div class="tile t4 px"><div class="t-in"><span id="cd-s">00</span></div><small><b class="hindi">सेकंड</b>Seconds</small></div>
     </div>
   </section>
 
   <!-- 5. Scratch card -->
   <section id="save">
     <div class="paper-card px">
-      <h2 class="cinzel">Save the Date</h2>
+      <h2 class="hi-title sm">शुभ तिथि</h2>
+      <p class="cinzel stitle">Save the Date</p>
       <p class="hint">Scratch the card below to reveal it</p>
       <div class="scratch">
         <div class="scratch-under">
+          <p class="hindi sc-hi">॥ शुभ विवाह ॥</p>
           <p class="cinzel">We're Getting Married!</p>
           <p class="serif-lg" data-cfg="dateShort"></p>
           <p class="hint" data-cfg="timeText"></p>
@@ -114,28 +119,29 @@
   <!-- 6. Royal couple -->
   <section id="couple">
     <p class="script heading-script px">With the blessings of our elders</p>
-    <h2 class="cinzel title px">The Royal Couple</h2>
+    <h2 class="hi-title px">वर-वधू</h2>
+    <p class="cinzel en-sub px">The Bride &amp; Groom</p>
     <div class="ornament px"></div>
     <div class="couple-grid">
       <figure class="person px" data-tilt="1">
-        <div class="jharokha j-orange tall" data-open>
+        <div class="jharokha j-maroon tall" data-open>
           <div class="j-top"><span class="lotus"></span><span class="lotus"></span></div>
           <div class="j-window"><div class="j-content photo" data-photo="groomPhoto" data-art="groom"></div><div class="shutter l"></div><div class="shutter r"></div></div>
         </div>
         <figcaption>
-          <span class="script role">The Groom</span>
+          <span class="role"><b class="hindi">वर</b> <span class="script">The Groom</span></span>
           <span class="cinzel pname" data-cfg="groomFull"></span>
           <span class="parents" data-cfg="groomParents"></span>
           <span class="parents" data-cfg="groomGrandparents"></span>
         </figcaption>
       </figure>
       <figure class="person px" data-tilt="-1">
-        <div class="jharokha j-blue tall" data-open>
+        <div class="jharokha j-rani tall" data-open>
           <div class="j-top"><span class="lotus"></span><span class="lotus"></span></div>
           <div class="j-window"><div class="j-content photo" data-photo="bridePhoto" data-art="bride"></div><div class="shutter l"></div><div class="shutter r"></div></div>
         </div>
         <figcaption>
-          <span class="script role">The Bride</span>
+          <span class="role"><b class="hindi">वधू</b> <span class="script">The Bride</span></span>
           <span class="cinzel pname" data-cfg="brideFull"></span>
           <span class="parents" data-cfg="brideParents"></span>
           <span class="parents" data-cfg="brideGrandparents"></span>
@@ -147,14 +153,15 @@
   <!-- 7. Family -->
   <section id="family">
     <p class="script heading-script px">With love and blessings</p>
-    <h2 class="cinzel title px">Our Family</h2>
+    <h2 class="hi-title px">हमारा परिवार</h2>
+    <p class="cinzel en-sub px">Our Family</p>
     <div class="ornament px"></div>
-    <h3 class="script side-title px">The Groom's Family</h3>
+    <h3 class="side-title px"><b class="hindi">वर पक्ष</b><span class="script">The Groom's Family</span></h3>
     <div class="family-grid" id="familyGroom"></div>
-    <h3 class="script side-title px">The Bride's Family</h3>
+    <h3 class="side-title px"><b class="hindi">कन्या पक्ष</b><span class="script">The Bride's Family</span></h3>
     <div class="family-grid" id="familyBride"></div>
     <div class="kids px">
-      <span class="label">Bal Manuhar</span>
+      <span class="label hindi">बाल मनुहार</span>
       <p class="hindi couplet" data-cfg="kidsCouplet"></p>
       <p class="script kid-names" data-cfg="kidsNames"></p>
     </div>
@@ -163,7 +170,8 @@
   <!-- 8. Festivities -->
   <section id="events">
     <p class="script heading-script px" id="eventsKicker"></p>
-    <h2 class="cinzel title px">The Royal Festivities</h2>
+    <h2 class="hi-title px">मांगलिक कार्यक्रम</h2>
+    <p class="cinzel en-sub px">The Wedding Ceremonies</p>
     <div class="ornament px"></div>
     <div class="timeline" id="timeline">
       <div class="lamp-string" id="lampString"></div>
@@ -174,7 +182,8 @@
   <!-- 9. Venue -->
   <section id="venue">
     <p class="script heading-script px">Where hearts unite</p>
-    <h2 class="cinzel title px">The Venue</h2>
+    <h2 class="hi-title px">विवाह स्थल</h2>
+    <p class="cinzel en-sub px">The Venue</p>
     <div class="ornament px"></div>
     <div class="royal-card venue-card px" data-flat>
       <div class="venue-photo"><img id="venuePhoto" alt="" loading="lazy"></div>
@@ -195,12 +204,13 @@
   <!-- 10. Closing -->
   <section id="closing">
     <div class="medallion px" aria-hidden="true"></div>
+    <h2 class="hi-title sm px">आपके आगमन की प्रतीक्षा में</h2>
     <p class="script heading-script px">We await your gracious presence</p>
     <h2 class="cinzel closing-names px" data-cfg="coupleCaps"></h2>
     <p class="hashtag px" data-cfg="hashtag"></p>
     <div class="hosts px">
-      <div><small>With best compliments</small><span data-cfg="hostFamily"></span></div>
-      <div><small>Vineet</small><span data-cfg="hostInviter"></span></div>
+      <div><small><b class="hindi">दर्शनाभिलाषी</b> With best compliments</small><span data-cfg="hostFamily"></span></div>
+      <div><small><b class="hindi">विनीत</b> Yours sincerely</small><span data-cfg="hostInviter"></span></div>
     </div>
     <div class="contacts px" id="contacts"></div>
   </section>

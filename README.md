@@ -1,17 +1,18 @@
-# Royal Gateway — Wedding Invitation Website
+# शुभ विवाह — Vikas & Avika's Wedding Invitation
 
-A royal Rajasthani-style wedding invite for Vikas & Avika (details from the printed card). It opens at a peacock palace gate, the view zooms through the doors, and everything after that is animated as you scroll:
+An Awadhi / Uttar Pradesh-style wedding invite (details from the printed card). All the artwork is drawn in code, and every section animates as you scroll:
 
-1. Names reveal, then a sunset palace that zooms into a haveli front while the page is held in place
-2. A carved window whose screens open to show the date and venue
-3. Invitation text with a countdown in colourful arch tiles
-4. A Save the Date scratch card
-5. The Royal Couple and Our Family in window frames that open
-6. The Royal Festivities: a hanging lamp comes down and each event scroll unrolls as you scroll
-7. Venue card with a photo of the entrance, a map and directions
-8. Closing with a desert scene, plus falling petals, rotating mandalas and optional music throughout
+1. **Awadhi gate**: an ivory gateway inspired by Lucknow's Rumi Darwaza, with the twin-fish emblem of Awadh, marigold garlands, a mango-leaf door garland and kalash pots. The doors swing open and the view zooms through.
+2. **Names over the Ganga**: dusk at the ghats of Shuklaganj, with temple spires, bamboo umbrellas, floating diyas and a boat. The page holds in place while it zooms into an Awadhi palace front (Bara Imambara style).
+3. **Date**: an arched window whose chikankari lattice screens open to show the date.
+4. **सादर आमंत्रण**: Ganesh shloka, the invitation text lighting up word by word, and a countdown in Awadhi arches.
+5. **शुभ तिथि**: a Save the Date scratch card.
+6. **वर-वधू** and **हमारा परिवार** (वर पक्ष / कन्या पक्ष) in garlanded arch frames, plus the बाल मनुहार lines.
+7. **मांगलिक कार्यक्रम**: Banarasi-brocade cards that unroll from marigold garlands while a brass bell comes down.
+8. **विवाह स्थल**: a venue photo and directions.
+9. **Closing**: a baraat procession (groom on a white mare, dhol, shehnai, light-bearers) walking up to a स्वागतम् gate with banana plants.
 
-All the artwork is drawn in code (SVG/CSS), so no image files are needed for the design itself.
+Marigold flowers turn at the sides as you scroll, and petals fall throughout.
 
 ## Customise
 - **`config.js`** is the only file you need to edit: names, parents, dates, events, venue (map link, coordinates, photo), contacts, music.

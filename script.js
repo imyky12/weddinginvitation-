@@ -20,7 +20,8 @@
     kidsCouplet: W.kids?.couplet,
     kidsNames: W.kids?.names,
     hostFamily: W.hosts?.family,
-    hostInviter: W.hosts?.inviter
+    hostInviter: W.hosts?.inviter,
+    coupleHindi: `${W.groomHindi} संग ${W.brideHindi}`
   };
   $$("[data-cfg]").forEach(el => {
     const v = derived[el.dataset.cfg] ?? W[el.dataset.cfg];
@@ -34,157 +35,242 @@
   invite.innerHTML = invite.textContent.split(" ").map(w => `<span class="w">${w}</span>`).join(" ");
   const words = $$(".invite-text .w");
 
-  /* ---------- Artwork ---------- */
-  function feather(x, y, angle, len) {
-    const ex = x + Math.cos(rad(angle)) * len, ey = y + Math.sin(rad(angle)) * len;
-    const mx = (x + ex) / 2, my = (y + ey) / 2;
-    return `<line x1="${x}" y1="${y}" x2="${ex}" y2="${ey}" stroke="#2f7d4f" stroke-width="2"/>
-      <ellipse cx="${mx}" cy="${my}" rx="${len / 2}" ry="${len / 9}" transform="rotate(${angle} ${mx} ${my})" fill="url(#fth)" opacity=".9"/>
-      <circle cx="${ex}" cy="${ey}" r="${len / 8}" fill="#d9a832"/><circle cx="${ex}" cy="${ey}" r="${len / 11}" fill="#1aa39a"/><circle cx="${ex}" cy="${ey}" r="${len / 20}" fill="#0c2a7a"/>`;
-  }
-  function peacock(x, y, from, to, len, count, facing) {
-    let tail = "";
-    for (let i = 0; i < count; i++) tail += feather(x, y, from + (to - from) * i / (count - 1), len * (0.85 + 0.15 * Math.sin(i)));
-    const hx = x + facing * 10, hy = y - 42;
-    return `<g>${tail}
-      <ellipse cx="${x}" cy="${y - 6}" rx="13" ry="24" fill="url(#body)" transform="rotate(${facing * 12} ${x} ${y})"/>
-      <path d="M${x} ${y - 24} Q${x + facing * 2} ${y - 40} ${hx} ${hy}" stroke="#1d4fb8" stroke-width="8" fill="none" stroke-linecap="round"/>
-      <circle cx="${hx}" cy="${hy}" r="7" fill="#1d4fb8"/><circle cx="${hx + facing * 2}" cy="${hy - 1}" r="1.6" fill="#fff"/>
-      <path d="M${hx + facing * 6} ${hy} l${facing * 7} 2 l${-facing * 7} 2z" fill="#e2b66e"/>
-      ${[-6, 0, 6].map(d => `<line x1="${hx}" y1="${hy - 6}" x2="${hx + d}" y2="${hy - 16}" stroke="#1d4fb8" stroke-width="1.2"/><circle cx="${hx + d}" cy="${hy - 17}" r="2" fill="#1aa39a"/>`).join("")}
-    </g>`;
-  }
-  $("#peacockSvg").innerHTML = `
-    <defs>
-      <linearGradient id="fth" x1="0" x2="1"><stop offset="0" stop-color="#1f6b3f"/><stop offset="1" stop-color="#4fb06a"/></linearGradient>
-      <radialGradient id="body" cx=".4" cy=".35"><stop offset="0" stop-color="#3a8dde"/><stop offset="1" stop-color="#0b2a8a"/></radialGradient>
-    </defs>
-    ${peacock(300, 150, -174, -6, 125, 19, 1)}${peacock(110, 150, 95, 165, 105, 10, 1)}${peacock(490, 150, 85, 15, 105, 10, -1)}`;
+  /* ---------- Artwork (Awadh / Uttar Pradesh) ---------- */
+  const svgUrl = s => `url("data:image/svg+xml,${encodeURIComponent(s)}")`;
 
-  function mandala(colors, rings = 7) {
-    let s = "";
-    for (let r = rings; r >= 1; r--) {
-      const n = 8 + r * 4, radius = r * 13, c = colors[r % colors.length];
-      for (let i = 0; i < n; i++) s += `<ellipse cx="0" cy="${-radius}" rx="${4 + r * 1.3}" ry="${7 + r * 1.6}" fill="${c}" stroke="${colors[(r + 2) % colors.length]}" stroke-width=".8" transform="rotate(${360 * i / n})"/>`;
-      s += `<circle r="${radius - 6}" fill="none" stroke="${colors[(r + 1) % colors.length]}" stroke-width="1" stroke-dasharray="2 3"/>`;
-    }
-    return `<svg viewBox="-114 -114 228 228">${s}<circle r="9" fill="${colors[0]}" stroke="${colors[3]}" stroke-width="2"/></svg>`;
-  }
-  const blues = ["#0b1f6e", "#1f4fb8", "#3a8dde", "#5cc8f0", "#122d8f", "#2a6fd6"];
-  $$(".mandala-bg").forEach(el => (el.innerHTML = mandala(blues)));
-  $$(".medallion").forEach(el => (el.innerHTML = mandala(["#2b2b3a", "#4a4a60", "#6d6d88", "#9a9ab5"], 5)));
+  // Chikankari-style white floral embroidery, used as a soft background texture
+  const chikan = (bg, thread) => `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+    <rect width="64" height="64" fill="${bg}"/>
+    <g fill="none" stroke="${thread}" stroke-width="1.1" stroke-linecap="round">
+      ${[0, 72, 144, 216, 288].map(a => `<ellipse cx="16" cy="10" rx="3" ry="5.5" transform="rotate(${a} 16 16)"/>`).join("")}
+      <circle cx="16" cy="16" r="1.6" fill="${thread}"/>
+      <path d="M22 22 q10 4 14 14 M36 36 q6 -8 14 -6 M36 36 q-2 8 4 14"/>
+      ${[0, 90, 180, 270].map(a => `<ellipse cx="48" cy="44" rx="2" ry="4" transform="rotate(${a} 48 48)"/>`).join("")}
+    </g>
+    <g fill="${thread}">${[[52, 12], [8, 44], [30, 56], [58, 30]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.2"/>`).join("")}</g></svg>`;
+  $("#gate").style.backgroundImage = `radial-gradient(ellipse at center, rgba(80, 20, 20, 0) 35%, rgba(80, 20, 20, .55) 100%), ${svgUrl(chikan("#f3e1d8", "#ffffff"))}`;
+  $("#gate").style.backgroundSize = "100% 100%, 64px 64px";
+  document.body.style.backgroundImage = svgUrl(chikan("#fbf5ea", "#f0e2c8"));
 
-  // Sunset palace
-  function dome(cx, y, r, fill = "url(#stone2)") {
-    return `<path d="M${cx - r} ${y} C${cx - r} ${y - r * 1.25} ${cx - r * .15} ${y - r * 1.2} ${cx} ${y - r * 1.55} C${cx + r * .15} ${y - r * 1.2} ${cx + r} ${y - r * 1.25} ${cx + r} ${y}Z" fill="${fill}"/>
-      <line x1="${cx}" y1="${y - r * 1.55}" x2="${cx}" y2="${y - r * 1.9}" stroke="#a8602e" stroke-width="2"/><circle cx="${cx}" cy="${y - r * 1.9}" r="2.5" fill="#d4a640"/>`;
+  function fish(x, y, s, flip) {
+    return `<g transform="translate(${x} ${y}) scale(${flip ? -s : s} ${s})">
+      <path d="M-46 0 C-30 -22 14 -24 34 -4 L52 -18 L46 0 L52 18 L34 4 C14 24 -30 22 -46 0Z" fill="url(#fishG)" stroke="#8a6420" stroke-width="1.5"/>
+      <path d="M-10 -14 q8 -14 22 -12 q-8 6 -10 14z M-6 14 q8 12 20 10 q-8 -6 -10 -12z" fill="#2e8b6e"/>
+      ${[-20, -8, 4, 16].map(px => `<path d="M${px} -9 q5 9 0 18" stroke="#8a6420" stroke-width="1" fill="none"/>`).join("")}
+      <circle cx="-32" cy="-3" r="3.2" fill="#fff"/><circle cx="-32" cy="-3" r="1.6" fill="#3a1c14"/></g>`;
   }
-  function chhatri(cx, y, w, fill) {
-    return `<rect x="${cx - w / 2}" y="${y - w * .6}" width="${w}" height="${w * .6}" fill="${fill || "url(#stone)"}"/>
-      ${[0, 1, 2].map(i => `<path d="M${cx - w / 2 + 3 + i * (w - 6) / 3} ${y} v${-w * .35} a${(w - 6) / 6} ${(w - 6) / 6} 0 0 1 ${(w - 6) / 3 - 2} 0 v${w * .35}z" fill="#7a3a1e"/>`).join("")}
-      <rect x="${cx - w / 2 - 3}" y="${y - w * .65}" width="${w + 6}" height="5" fill="#c97b45"/>${dome(cx, y - w * .65, w / 2)}`;
+  function marigoldRope(pts, r = 6) {
+    return pts.map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${i % 3 === 2 ? "#ffcd3c" : "#f08a24"}" stroke="#c4561f" stroke-width=".8"/>`).join("");
   }
-  function windows(x, y, w, h, cols, rows, gap, dark = "#7a3a1e", trim = "#f4c690") {
-    let s = "";
-    const ww = (w - gap * (cols + 1)) / cols, wh = (h - gap * (rows + 1)) / rows;
-    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-      const wx = x + gap + c * (ww + gap), wy = y + gap + r * (wh + gap);
-      const lit = (r * 7 + c * 3) % 5 === 0;
-      s += `<path d="M${wx} ${wy + wh} V${wy + ww / 2} A${ww / 2} ${ww / 2} 0 0 1 ${wx + ww} ${wy + ww / 2} V${wy + wh}Z" fill="${lit ? "#ffd27a" : dark}" stroke="${trim}" stroke-width="1.5"/>`;
+  function swag(x1, x2, y, dip, n) {
+    const pts = [];
+    for (let i = 0; i <= n; i++) { const t = i / n; pts.push([x1 + (x2 - x1) * t, y + 4 * dip * t * (1 - t)]); }
+    return marigoldRope(pts);
+  }
+  function strand(x, y, len) {
+    const pts = [];
+    for (let k = 0; k < len; k += 11) pts.push([x, y + k]);
+    return marigoldRope(pts, 5) + `<path d="M${x - 6} ${y + len} l6 14 l6 -14z" fill="#c8102e"/>`;
+  }
+  function leaf(x, y, a, s = 1, c = "#3f7d2c") {
+    return `<path d="M0 0 C6 6 6 22 0 32 C-6 22 -6 6 0 0Z" transform="translate(${x} ${y}) rotate(${a}) scale(${s})" fill="${c}" stroke="#2a5a1d" stroke-width=".8"/>`;
+  }
+  function bandanwar(x1, x2, y) {
+    let s = `<path d="M${x1} ${y} Q${(x1 + x2) / 2} ${y + 8} ${x2} ${y}" stroke="#8a6420" stroke-width="2" fill="none"/>`;
+    const n = 13;
+    for (let i = 0; i <= n; i++) {
+      const x = x1 + (x2 - x1) * i / n, yy = y + 8 * 4 * (i / n) * (1 - i / n) / 2;
+      s += i % 2 ? leaf(x, yy, 0, .9) : `<circle cx="${x}" cy="${yy + 6}" r="6" fill="#f08a24" stroke="#c4561f"/>`;
     }
     return s;
   }
-  const stoneDefs = `<defs>
-      <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2b57a"/><stop offset="1" stop-color="#b8693a"/></linearGradient>
-      <linearGradient id="stone2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e09a5c"/><stop offset=".5" stop-color="#f8cf9a"/><stop offset="1" stop-color="#c47a42"/></linearGradient>
-      <linearGradient id="pink" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0ad86"/><stop offset="1" stop-color="#c8694a"/></linearGradient>
-    </defs>`;
-  $("#palaceSvg").innerHTML = `${stoneDefs}
-    <rect x="0" y="330" width="1200" height="90" fill="url(#stone)"/>${windows(0, 330, 1200, 90, 30, 1, 10)}
-    <rect x="100" y="220" width="310" height="115" fill="url(#stone)"/>${windows(100, 220, 310, 115, 7, 2, 8)}
-    <rect x="790" y="220" width="310" height="115" fill="url(#stone)"/>${windows(790, 220, 310, 115, 7, 2, 8)}
-    ${chhatri(130, 220, 44)}${chhatri(255, 220, 54)}${chhatri(380, 220, 44)}${chhatri(820, 220, 44)}${chhatri(945, 220, 54)}${chhatri(1070, 220, 44)}
-    <rect x="410" y="150" width="380" height="185" fill="url(#stone)"/>${windows(410, 150, 380, 120, 8, 2, 9)}
-    <path d="M555 335 V280 A45 45 0 0 1 645 280 V335Z" fill="#5a2a14" stroke="#f4c690" stroke-width="3"/>
-    <rect x="400" y="142" width="400" height="10" fill="#c97b45"/>${dome(600, 142, 90)}${chhatri(450, 142, 50)}${chhatri(750, 142, 50)}
-    <rect x="20" y="170" width="70" height="165" fill="url(#stone)"/>${windows(20, 170, 70, 165, 2, 4, 6)}${dome(55, 170, 35)}
-    <rect x="1110" y="170" width="70" height="165" fill="url(#stone)"/>${windows(1110, 170, 70, 165, 2, 4, 6)}${dome(1145, 170, 35)}`;
-
-  // Haveli facade that rises up to fill the screen
-  function jharokha(x, y, w, h) {
-    return `<path d="M${x - 8} ${y + 22} Q${x + w / 2} ${y - 18} ${x + w + 8} ${y + 22}Z" fill="#b65c3c"/>
-      <rect x="${x - 10}" y="${y + 20}" width="${w + 20}" height="6" fill="#f6dcc0"/>
-      <rect x="${x}" y="${y + 26}" width="${w}" height="${h - 40}" fill="#e39a72" stroke="#f6dcc0" stroke-width="2"/>
-      ${windows(x, y + 26, w, h - 40, 3, 1, 6, "#5a2a14", "#f6dcc0")}
-      <rect x="${x - 6}" y="${y + h - 14}" width="${w + 12}" height="8" fill="#f6dcc0"/>
-      ${[0, 1, 2, 3].map(i => `<path d="M${x + 4 + i * (w - 8) / 3} ${y + h - 6} q-4 10 0 16" stroke="#b65c3c" stroke-width="4" fill="none"/>`).join("")}`;
+  function swastik(x, y, s, c = "#c8102e") {
+    return `<g transform="translate(${x} ${y}) scale(${s})" stroke="${c}" stroke-width="2.4" fill="none" stroke-linecap="round">
+      <path d="M0 -8 V8 M-8 0 H8 M0 -8 H6 M8 0 V6 M0 8 H-6 M-8 0 V-6"/>${[[-4, -4], [4, -4], [-4, 4], [4, 4]].map(([a, b]) => `<circle cx="${a}" cy="${b}" r="1" fill="${c}"/>`).join("")}</g>`;
   }
-  let fac = `${stoneDefs}<rect width="1200" height="900" fill="url(#pink)"/>`;
-  [[30, 150], [215, 175], [410, 175]].forEach(([y, h]) => {
-    fac += `<rect x="0" y="${y + h + 4}" width="1200" height="10" fill="#f6dcc0"/>`;
-    for (let x = 20; x < 1200; x += 165) fac += jharokha(x, y, 120, h);
+  function kalash(cx, by, s) {
+    return `<g transform="translate(${cx} ${by}) scale(${s})">
+      ${[-60, -35, -12, 12, 35, 60].map(a => leaf(0, -62, 180 + a, 1.1)).join("")}
+      <ellipse cx="0" cy="-70" rx="13" ry="16" fill="#8a5a2b"/><path d="M-12 -60 q12 8 24 0 v6 q-12 6 -24 0z" fill="#c8102e"/>
+      <path d="M-14 -56 h28 l-3 8 h-22z" fill="url(#brass)"/>
+      <path d="M-11 -48 C-40 -40 -40 -4 -18 0 H18 C40 -4 40 -40 11 -48Z" fill="url(#brass)" stroke="#8a6420"/>
+      <path d="M-30 -30 q30 10 60 0" stroke="#c8102e" stroke-width="3" fill="none"/>${swastik(0, -18, .9)}
+      <rect x="-20" y="-2" width="40" height="5" rx="2" fill="#8a6420"/></g>`;
+  }
+  function diya(x, y, s = 1) {
+    return `<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="-10" rx="6" ry="14" fill="#ffd27a" opacity=".35"/>
+      <path d="M0 -14 q-5 7 0 12 q5 -5 0 -12z" fill="#ff9f1c"/><path d="M-12 -3 q12 12 24 0 q-2 -3 -12 -3 q-10 0 -12 3z" fill="#b5541f"/></g>`;
+  }
+  function multifoil(x, yb, w, h, foils = 7) {
+    const r = w / 2, cx = x + r, sy = yb - h + r;
+    let d = `M${x} ${yb} V${sy}`, px = x, py = sy;
+    for (let i = 1; i <= foils; i++) {
+      const a = Math.PI + Math.PI * i / foils, nx = cx + r * Math.cos(a), ny = sy + r * Math.sin(a);
+      const ch = Math.hypot(nx - px, ny - py);
+      d += ` A${ch * .62} ${ch * .62} 0 0 1 ${nx.toFixed(1)} ${ny.toFixed(1)}`;
+      px = nx; py = ny;
+    }
+    return d + ` V${yb}Z`;
+  }
+  const defs = `<defs>
+    <linearGradient id="fishG" x1="0" x2="1"><stop offset="0" stop-color="#f8dc8a"/><stop offset=".6" stop-color="#d4a640"/><stop offset="1" stop-color="#9c7425"/></linearGradient>
+    <linearGradient id="brass" x1="0" x2="1"><stop offset="0" stop-color="#9c6a1e"/><stop offset=".45" stop-color="#f3d27a"/><stop offset="1" stop-color="#9c6a1e"/></linearGradient>
+    <linearGradient id="ivory" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf4e4"/><stop offset="1" stop-color="#e9d8b8"/></linearGradient>
+    <linearGradient id="ivory2" x1="0" x2="1"><stop offset="0" stop-color="#dcc79f"/><stop offset=".5" stop-color="#fbf1dc"/><stop offset="1" stop-color="#cdb68c"/></linearGradient>
+    <linearGradient id="ghat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9b98a"/><stop offset="1" stop-color="#b77650"/></linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2a96b"/><stop offset=".45" stop-color="#b9707a"/><stop offset="1" stop-color="#5a3f6e"/></linearGradient>
+  </defs>`;
+
+  // Gate: Awadhi darwaza with twin fish, marigold swags, mango-leaf toran and kalash
+  $("#gateArt").innerHTML = `${defs}
+    <rect width="500" height="600" fill="url(#ivory)"/>
+    <path d="${multifoil(92, 600, 316, 390, 9)}" fill="#f4e6c8" stroke="#c9a24a" stroke-width="4"/>
+    <path d="${multifoil(108, 600, 284, 360, 9)}" fill="none" stroke="#e6cf96" stroke-width="2"/>
+    <text x="250" y="34" text-anchor="middle" font-family="Tiro Devanagari Hindi, serif" font-size="20" fill="#7b1424">॥ श्री गणेशाय नमः ॥</text>
+    ${fish(165, 120, 1, false)}${fish(335, 120, 1, true)}
+    <path d="M232 112 Q250 72 268 112Z" fill="url(#brass)"/><path d="M226 112 h48" stroke="#8a6420" stroke-width="3"/><path d="M250 112 v22" stroke="#8a6420" stroke-width="3"/><circle cx="250" cy="70" r="4" fill="#c8102e"/>
+    ${swag(14, 170, 168, 26, 14)}${swag(170, 330, 168, 30, 14)}${swag(330, 486, 168, 26, 14)}
+    ${strand(14, 172, 70)}${strand(170, 172, 50)}${strand(330, 172, 50)}${strand(486, 172, 70)}
+    ${bandanwar(126, 374, 214)}
+    ${kalash(54, 598, 1)}${kalash(446, 598, 1)}
+    ${diya(110, 598, 1)}${diya(390, 598, 1)}`;
+
+  // Marigold (genda) flowers for the sides, and a chowk purana medallion
+  function marigold() {
+    let s = "";
+    const cols = ["#d9480f", "#e8590c", "#f76707", "#fd7e14", "#ff922b", "#fcc419", "#ffd43b"];
+    for (let ring = 7; ring >= 1; ring--) {
+      const n = 10 + ring * 4, rr = ring * 13, c = cols[7 - ring];
+      for (let i = 0; i < n; i++) {
+        const a = 360 * i / n + ring * 7;
+        s += `<path d="M-${5 + ring} 0 Q-${6 + ring} -${10 + ring * 1.8} 0 -${14 + ring * 2} Q${6 + ring} -${10 + ring * 1.8} ${5 + ring} 0Z" transform="rotate(${a}) translate(0 ${-rr + 8})" fill="${c}" stroke="#b8400a" stroke-width=".7"/>`;
+      }
+    }
+    return `<svg viewBox="-118 -118 236 236">${s}<circle r="10" fill="#e8590c"/>${[0, 60, 120, 180, 240, 300].map(a => `<circle cx="${Math.cos(rad(a)) * 5}" cy="${Math.sin(rad(a)) * 5}" r="2" fill="#7a2a0a"/>`).join("")}</svg>`;
+  }
+  function chowk() {
+    let s = `<rect x="-62" y="-62" width="124" height="124" fill="none" stroke="#c8102e" stroke-width="4" transform="rotate(45)"/>
+      <rect x="-62" y="-62" width="124" height="124" fill="none" stroke="#c8102e" stroke-width="4"/>`;
+    for (let i = 0; i < 8; i++) s += `<path d="M0 -20 Q14 -40 0 -58 Q-14 -40 0 -20Z" fill="#f6c12b" stroke="#c8102e" stroke-width="2" transform="rotate(${i * 45})"/>`;
+    for (let i = 0; i < 16; i++) s += `<circle cx="0" cy="-76" r="3.5" fill="#c8102e" transform="rotate(${i * 22.5})"/>`;
+    return `<svg viewBox="-92 -92 184 184">${s}<circle r="18" fill="#fff" stroke="#c8102e" stroke-width="3"/>${swastik(0, 0, 1)}</svg>`;
+  }
+  $$(".mandala-bg").forEach(el => (el.innerHTML = marigold()));
+  $$(".medallion").forEach(el => (el.innerHTML = chowk()));
+
+  // Hero: dusk on the Ganga at the ghats of Shuklaganj
+  function onion(cx, y, r, fill = "url(#ivory2)") {
+    return `<path d="M${cx - r} ${y} C${cx - r * 1.15} ${y - r * 1.1} ${cx - r * .2} ${y - r * 1.3} ${cx} ${y - r * 1.8} C${cx + r * .2} ${y - r * 1.3} ${cx + r * 1.15} ${y - r * 1.1} ${cx + r} ${y}Z" fill="${fill}"/>
+      <path d="M${cx} ${y - r * 1.8} v-${r * .45}" stroke="#b8862e" stroke-width="2"/><circle cx="${cx}" cy="${y - r * 2.3}" r="2.5" fill="#d4a640"/>`;
+  }
+  function shikhara(cx, by, w, h, c1 = "#e7b07c", c2 = "#c27a4a") {
+    const t = by - h;
+    let bands = "";
+    for (let k = 1; k < 6; k++) { const yy = by - h * k / 6.2, ww = w / 2 * (1 - (k / 6.2) ** 2.2); bands += `<path d="M${cx - ww} ${yy} H${cx + ww}" stroke="${c2}" stroke-width="2"/>`; }
+    return `<path d="M${cx - w / 2} ${by} C${cx - w / 2} ${by - h * .55} ${cx - w * .2} ${t + h * .08} ${cx} ${t} C${cx + w * .2} ${t + h * .08} ${cx + w / 2} ${by - h * .55} ${cx + w / 2} ${by}Z" fill="${c1}"/>${bands}
+      <ellipse cx="${cx}" cy="${t - 3}" rx="${w * .14}" ry="5" fill="${c2}"/><path d="M${cx} ${t - 8} v-26" stroke="#7a3a1e" stroke-width="2"/>
+      <path d="M${cx} ${t - 34} l22 7 l-22 7z" fill="#ff7b00"/>`;
+  }
+  function houses(x, w, by, h, c) {
+    let s = `<rect x="${x}" y="${by - h}" width="${w}" height="${h}" fill="${c}"/><rect x="${x - 3}" y="${by - h - 5}" width="${w + 6}" height="6" fill="#f4e2c4"/>`;
+    for (let wx = x + 8; wx < x + w - 10; wx += 20) for (let wy = by - h + 12; wy < by - 18; wy += 26)
+      s += `<path d="M${wx} ${wy + 14} v-8 a5 5 0 0 1 10 0 v8z" fill="${(wx + wy) % 3 ? "#6b3a2a" : "#ffd27a"}"/>`;
+    return s;
+  }
+  function umbrella(x, y) {
+    return `<path d="M${x} ${y} v-26" stroke="#5a3a1a" stroke-width="2"/><path d="M${x - 22} ${y - 22} Q${x} ${y - 40} ${x + 22} ${y - 22}Z" fill="#e8c27a" stroke="#8a6420"/>`;
+  }
+  function boat(x, y, s) {
+    return `<g transform="translate(${x} ${y}) scale(${s})"><path d="M-60 0 Q0 18 60 0 L50 -6 H-50Z" fill="#4a2a1a"/><path d="M-30 -6 v-22 h40 v22" fill="#c8102e" opacity=".85"/>
+      <circle cx="40" cy="-24" r="5" fill="#3a1c14"/><path d="M40 -19 v14 M40 -14 l18 22" stroke="#3a1c14" stroke-width="3"/></g>`;
+  }
+  let ghat = `${defs}
+    <path d="M0 262 H330" stroke="#a0707a" stroke-width="3" opacity=".6"/>${[0, 1, 2, 3, 4, 5].map(i => `<path d="M${i * 55} 300 v-38 a27 22 0 0 1 55 0 v38" fill="none" stroke="#a0707a" stroke-width="5" opacity=".55"/>`).join("")}
+    ${houses(330, 120, 290, 90, "#e2a679")}${shikhara(470, 290, 70, 170)}${houses(505, 70, 290, 70, "#d99766")}
+    <rect x="560" y="200" width="120" height="90" fill="url(#ivory2)"/><path d="${multifoil(580, 290, 34, 54, 5)}" fill="#6b3a2a"/><path d="${multifoil(623, 290, 34, 54, 5)}" fill="#6b3a2a"/>
+    ${onion(620, 200, 52)}${onion(570, 200, 13)}${onion(670, 200, 13)}
+    ${shikhara(760, 290, 90, 210, "#f0bd85", "#c47a42")}${houses(805, 150, 290, 100, "#e6ad80")}${shikhara(985, 290, 60, 140)}${houses(1015, 185, 290, 80, "#dc9b6c")}
+    ${[0, 1, 2, 3, 4].map(i => `<rect x="0" y="${290 + i * 8}" width="1200" height="8" fill="${i % 2 ? "#c98a5e" : "#e4b183"}"/>`).join("")}
+    ${umbrella(380, 300)}${umbrella(700, 300)}${umbrella(1080, 300)}
+    <rect x="0" y="330" width="1200" height="90" fill="url(#water)"/>
+    ${[0, 1, 2, 3, 4, 5, 6].map(i => `<ellipse cx="600" cy="${342 + i * 11}" rx="${70 - i * 7}" ry="2.5" fill="#ffe3a3" opacity="${.75 - i * .08}"/>`).join("")}
+    ${[[120, 350], [210, 372], [330, 360], [470, 395], [760, 380], [880, 356], [1010, 392], [1130, 366]].map(([x, y]) => diya(x, y, .8)).join("")}
+    ${boat(930, 384, .9)}`;
+  $("#palaceSvg").innerHTML = ghat;
+
+  // Facade: Awadhi palace front (Bara Imambara style) that rises to fill the screen
+  let fac = `${defs}<rect width="1200" height="900" fill="url(#ivory)"/>`;
+  for (let x = 0; x < 1200; x += 24) fac += `<path d="M${x} 46 l12 -18 l12 18z" fill="#e3cfa6"/>`;
+  fac += `<rect x="0" y="46" width="1200" height="10" fill="#c9a24a"/>`;
+  for (let x = 30; x < 1200; x += 150) fac += `<rect x="${x - 7}" y="0" width="14" height="46" fill="#ead9b6"/>${onion(x, 4, 11)}`;
+  [[80, 300], [360, 580]].forEach(([top, bot]) => {
+    for (let x = 20; x < 1200; x += 150) {
+      fac += `<path d="${multifoil(x + 15, bot - 10, 120, bot - top - 30, 7)}" fill="#f7ecd4" stroke="#c9a24a" stroke-width="3"/>
+        <path d="${multifoil(x + 27, bot - 10, 96, bot - top - 50, 7)}" fill="#5b3a2e"/>${strand(x + 75, top + 70, 60)}`;
+      fac += fish(x + 2, top + 22, .32, false) + fish(x + 148, top + 22, .32, true);
+    }
+    fac += `<rect x="0" y="${bot - 10}" width="1200" height="14" fill="#d9c08a"/>${swag(0, 400, bot + 6, 16, 30)}${swag(400, 800, bot + 6, 16, 30)}${swag(800, 1200, bot + 6, 16, 30)}`;
   });
-  fac += `<rect x="0" y="600" width="1200" height="300" fill="#d98763"/>
-    ${windows(0, 610, 1200, 70, 20, 1, 10, "#5a2a14", "#f6dcc0")}
-    <path d="M440 900 V770 C440 700 520 680 600 630 C680 680 760 700 760 770 V900Z" fill="#f6dcc0"/>
-    <path d="M462 900 V775 C462 712 532 696 600 652 C668 696 738 712 738 775 V900Z" fill="#fbf3e6"/>
-    ${[90, 270, 870, 1050].map(x => `<path d="M${x} 900 V790 a40 40 0 0 1 80 0 V900Z" fill="#5a2a14" stroke="#f6dcc0" stroke-width="4"/>`).join("")}
-    <rect x="0" y="880" width="1200" height="20" fill="#a8502f"/>`;
+  fac += `<rect x="0" y="600" width="1200" height="300" fill="#efe1c4"/>
+    ${[90, 270, 870, 1050].map(x => `<path d="${multifoil(x, 880, 90, 170, 5)}" fill="#5b3a2e" stroke="#c9a24a" stroke-width="3"/>`).join("")}
+    <path d="${multifoil(420, 900, 360, 290, 11)}" fill="#f7ecd4" stroke="#c9a24a" stroke-width="5"/>
+    <path d="${multifoil(452, 900, 296, 250, 11)}" fill="#fbf5ea"/>
+    ${fish(470, 640, .7, false)}${fish(730, 640, .7, true)}${bandanwar(470, 730, 662)}
+    <rect x="0" y="880" width="1200" height="20" fill="#b9935a"/>`;
   $("#facadeSvg").innerHTML = fac;
 
-  // Desert: three layers that rise at different speeds
-  function camel(x, y, s, c) {
-    return `<g transform="translate(${x} ${y}) scale(${s})" fill="${c}">
-      <path d="M-30 -30 Q-26 -52 -12 -44 Q-4 -62 10 -46 Q22 -44 26 -32 L30 -50 Q32 -64 42 -62 L48 -58 L40 -56 L36 -30 Q34 -20 24 -20 L-24 -20 Q-32 -22 -30 -30Z"/>
-      <rect x="-24" y="-22" width="4" height="22"/><rect x="-14" y="-22" width="4" height="22"/><rect x="14" y="-22" width="4" height="22"/><rect x="22" y="-22" width="4" height="22"/></g>`;
+  // Closing: the baraat walks to the welcome gate
+  function person(x, y, kurta, turban, extra = "") {
+    return `<g transform="translate(${x} ${y})"><path d="M-3 0 l-3 -22 M3 0 l3 -22" stroke="#3a1c14" stroke-width="3"/>
+      <path d="M-9 -22 L-7 -46 H7 L9 -22Z" fill="${kurta}"/><circle cx="0" cy="-52" r="6" fill="#d9a07a"/>
+      <path d="M-7 -55 q7 -10 14 0z" fill="${turban}"/>${extra}</g>`;
   }
-  function hut(x, y, w) {
-    let art = "";
-    for (let i = 0; i < 6; i++) art += `<path d="M${x + 4 + i * (w - 8) / 6} ${y - w * .5} l${(w - 8) / 12} -8 l${(w - 8) / 12} 8z" fill="${i % 2 ? "#c0392b" : "#2e7d5b"}"/>`;
-    return `<rect x="${x}" y="${y - w * .7}" width="${w}" height="${w * .7}" rx="6" fill="#fbecd0" stroke="#b04a2a" stroke-width="2"/>${art}
-      <path d="M${x - 10} ${y - w * .64} Q${x + w / 2} ${y - w * 1.5} ${x + w + 10} ${y - w * .64}Z" fill="#d9a24e" stroke="#8a5a1c" stroke-width="2"/>
-      ${[1, 2, 3, 4, 5].map(i => `<path d="M${x - 6 + i * (w + 12) / 6} ${y - w * .66} Q${x + w / 2} ${y - w * 1.2} ${x + w / 2} ${y - w * 1.38}" stroke="#a87a30" stroke-width="1.5" fill="none"/>`).join("")}
-      <path d="M${x + w * .38} ${y} v${-w * .32} a${w * .12} ${w * .12} 0 0 1 ${w * .24} 0 v${w * .32}z" fill="#7a3a1e"/>
-      <rect x="${x + w * .1}" y="${y - w * .4}" width="${w * .14}" height="${w * .14}" fill="#7a3a1e" stroke="#f6c12b" stroke-width="2"/>`;
+  function mare(x, y) {
+    return `<g transform="translate(${x} ${y})">
+      <path d="M-34 -30 q-10 6 -14 24" stroke="#f4efe2" stroke-width="5" fill="none"/>
+      <ellipse cx="0" cy="-34" rx="34" ry="15" fill="#f8f4ea" stroke="#d8cdb5"/>
+      ${[-24, -14, 16, 26].map(lx => `<path d="M${lx} -24 v24" stroke="#ece4d2" stroke-width="5"/>`).join("")}
+      <path d="M26 -42 L40 -70 L54 -64 L44 -40Z" fill="#f8f4ea" stroke="#d8cdb5"/><path d="M40 -70 l-4 -8 l8 4z" fill="#f8f4ea"/>
+      <path d="M-24 -48 h44 v20 q-22 8 -44 0z" fill="#c8102e"/>${[0, 1, 2, 3, 4].map(i => `<circle cx="${-20 + i * 10}" cy="-30" r="2.5" fill="#f6c12b"/>`).join("")}
+      ${person(-2, -46, "#f3e3c0", "#e4572e", `<path d="M-6 -50 v10 M-2 -50 v12 M2 -50 v12 M6 -50 v10" stroke="#f6c12b" stroke-width="1.5"/>`)}
+      <path d="M-6 -118 v20" stroke="#7a3a1e" stroke-width="2"/><path d="M-26 -116 Q-6 -134 14 -116Z" fill="#c8102e" stroke="#f6c12b"/></g>`;
   }
-  function tree(x, y, s) {
-    let leaves = "";
-    for (let i = 0; i < 34; i++) {
-      const a = rad(-170 + i * 4.8), r = 30 + (i % 4) * 14, lx = x + Math.cos(a) * r * s, ly = y - 100 * s + Math.sin(a) * r * s;
-      leaves += `<ellipse cx="${lx}" cy="${ly}" rx="${8 * s}" ry="${4 * s}" fill="${i % 4 ? "#5b8a3a" : "#e2672a"}" transform="rotate(${i * 23} ${lx} ${ly})"/>`;
-    }
-    return `<path d="M${x - 6} ${y} Q${x} ${y - 70 * s} ${x} ${y - 100 * s} M${x} ${y - 75 * s} q${22 * s} ${-12 * s} ${36 * s} ${-34 * s} M${x} ${y - 62 * s} q${-24 * s} ${-8 * s} ${-38 * s} ${-28 * s}" stroke="#6b3e1e" stroke-width="${6 * s}" fill="none"/>${leaves}`;
+  function roshni(x, y) {
+    return person(x, y, "#5a3a7a", "#f6c12b", `<path d="M0 -60 v-20 M-12 -80 h24" stroke="#8a6420" stroke-width="2"/><circle cx="-12" cy="-84" r="6" fill="#fff4c4"/><circle cx="12" cy="-84" r="6" fill="#fff4c4"/><circle cx="0" cy="-86" r="16" fill="#ffd27a" opacity=".35"/>`);
   }
-  function sittingCamel(x, y, s) {
-    return `<g transform="translate(${x} ${y}) scale(${s})">
-      <ellipse cx="0" cy="-30" rx="70" ry="34" fill="#9a5a2a"/>
-      <path d="M-30 -58 Q0 -96 30 -58Z" fill="#9a5a2a"/>
-      <path d="M-50 -40 h100 v30 q-50 14 -100 0z" fill="#b0182e"/>
-      ${[0, 1, 2, 3, 4, 5, 6].map(i => `<circle cx="${-44 + i * 14.5}" cy="-26" r="4" fill="#f6c12b"/><path d="M${-46 + i * 14.5} -12 l3 10 l3 -10" fill="#f6c12b"/>`).join("")}
-      <path d="M58 -40 Q96 -60 92 -110 Q90 -130 104 -132 L122 -126 Q126 -118 116 -114 L106 -112 Q110 -60 74 -22Z" fill="#9a5a2a"/>
-      <circle cx="110" cy="-124" r="2" fill="#2b1308"/>
-      <path d="M104 -112 q-6 20 -20 26" stroke="#f6c12b" stroke-width="2" fill="none"/><circle cx="84" cy="-84" r="5" fill="#b0182e"/>
-      <path d="M-66 -4 h132" stroke="#6b3e1e" stroke-width="10" stroke-linecap="round"/></g>`;
+  function banana(x, y, s) {
+    return `<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 0 V-90" stroke="#6b8a3a" stroke-width="8"/>
+      ${[-62, -30, 30, 62, 0].map(a => `<path d="M0 -88 Q${a * .5} ${-128 + Math.abs(a) * .4} ${a * 1.25} ${-70 + Math.abs(a) * .5} Q${a * .55} ${-84 + Math.abs(a) * .3} 0 -88Z" fill="${a ? "#4f9a34" : "#6bb34a"}" stroke="#2a5a1d" stroke-width="1.5"/>
+        <path d="M0 -88 Q${a * .5} ${-112 + Math.abs(a) * .4} ${a * 1.2} ${-72 + Math.abs(a) * .5}" stroke="#2a5a1d" stroke-width="1.2" fill="none"/>`).join("")}</g>`;
+  }
+  function welcomeGate(x1, x2, by) {
+    const mid = (x1 + x2) / 2;
+    return `${banana(x1 - 26, by, 1)}${banana(x2 + 26, by, 1)}
+      <rect x="${x1 - 10}" y="${by - 150}" width="20" height="150" fill="#c8102e"/><rect x="${x2 - 10}" y="${by - 150}" width="20" height="150" fill="#c8102e"/>
+      <path d="M${x1 - 18} ${by - 150} Q${mid} ${by - 210} ${x2 + 18} ${by - 150}" stroke="#d4a640" stroke-width="22" fill="none"/>
+      <text x="${mid}" y="${by - 166}" text-anchor="middle" font-family="Tiro Devanagari Hindi, serif" font-size="20" fill="#7b1424">स्वागतम्</text>
+      ${swag(x1, x2, by - 140, 20, 16)}${strand(x1, by - 140, 60)}${strand(x2, by - 140, 60)}${kalash(x1 - 2, by, .5)}${kalash(x2 + 2, by, .5)}`;
+  }
+  function shehnaiPlayers(x, y) {
+    return `<rect x="${x - 40}" y="${y - 6}" width="80" height="8" fill="#c8102e"/>
+      ${[-16, 16].map(dx => `<g transform="translate(${x + dx} ${y - 6})"><path d="M-12 0 Q0 -10 12 0Z" fill="#f3e3c0"/><path d="M-8 -2 L-6 -26 H6 L8 -2Z" fill="#f3e3c0"/>
+        <circle cx="0" cy="-32" r="6" fill="#d9a07a"/><path d="M-7 -35 q7 -10 14 0z" fill="#e4572e"/><path d="M4 -30 l16 10" stroke="#8a6420" stroke-width="3"/><circle cx="21" cy="-19" r="3" fill="#d4a640"/></g>`).join("")}`;
   }
   const [far, mid, near] = $$("#desert .d-layer");
-  far.innerHTML = `<defs><linearGradient id="dsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf3e6" stop-opacity="0"/><stop offset=".6" stop-color="#f8e2b8"/></linearGradient></defs>
-    <rect width="1200" height="360" fill="url(#dsky)"/><circle cx="880" cy="170" r="44" fill="#ffd27a" opacity=".6"/>
-    <path d="M0 260 Q200 210 420 245 T820 236 T1200 246 V360 H0Z" fill="#ecc27a" opacity=".75"/>`;
-  mid.innerHTML = `<path d="M0 292 Q300 260 600 288 T1200 282 V360 H0Z" fill="#e2ab5c"/>
-    <g class="caravan">${camel(560, 290, .5, "#7a3a1e")}${camel(615, 291, .5, "#7a3a1e")}${camel(670, 292, .5, "#7a3a1e")}
-      <path d="M705 292 v-16 m0 4 l-5 10 m5 -10 l5 10 m-5 -14 a4 4 0 1 0 0 -1" stroke="#7a3a1e" stroke-width="3" fill="#7a3a1e"/></g>
-    <g stroke="#7a3a1e" stroke-width="2" fill="none"><path d="M620 290 V230 M610 290 L620 236 L630 290"/>${[0, 60, 120, 180, 240, 300].map(a => `<line x1="620" y1="230" x2="${620 + Math.cos(rad(a)) * 16}" y2="${230 + Math.sin(rad(a)) * 16}"/>`).join("")}</g>`;
-  near.innerHTML = `<path d="M0 320 Q300 300 600 318 T1200 314 V360 H0Z" fill="#d9a24e"/>
-    ${hut(70, 334, 66)}${tree(20, 340, 1)}${hut(1060, 334, 76)}${tree(1170, 340, 1)}${tree(250, 340, 1.2)}${hut(300, 330, 100)}${hut(425, 334, 72)}${sittingCamel(770, 336, .9)}${tree(965, 340, 1.1)}
-    ${[200, 520, 640, 900, 1110].map(x => `<path d="M${x} 340 l4 -14 l4 14 m-10 -4 l-6 -8 m14 8 l6 -8" stroke="#6b8a3a" stroke-width="2" fill="none"/>`).join("")}`;
+  far.innerHTML = `${defs}<linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf5ea" stop-opacity="0"/><stop offset=".6" stop-color="#f7dcc0"/></linearGradient>
+    <rect width="1200" height="360" fill="url(#dusk)"/><circle cx="880" cy="190" r="40" fill="#ffd27a" opacity=".55"/>
+    <g opacity=".45">${shikhara(240, 280, 50, 120, "#d9a07a", "#b77650")}${onion(420, 280, 40, "#d9b48a")}<rect x="380" y="250" width="80" height="30" fill="#d9b48a"/>${shikhara(980, 280, 44, 100, "#d9a07a", "#b77650")}</g>
+    <rect x="0" y="270" width="1200" height="30" fill="#e3b49a" opacity=".7"/>`;
+  mid.innerHTML = `<path d="M0 300 H1200 V360 H0Z" fill="#ead2ae"/>
+    <g class="caravan">${roshni(420, 318)}${person(470, 318, "#2f5d8a", "#c8102e", `<ellipse cx="0" cy="-34" rx="9" ry="7" fill="#b5541f"/>`)}${person(505, 318, "#f6c12b", "#c8102e", `<path d="M4 -48 l14 8" stroke="#8a6420" stroke-width="3"/>`)}
+      ${mare(580, 318)}${person(640, 318, "#c2185b", "#f6c12b")}${roshni(680, 318)}${person(715, 318, "#3f7d2c", "#e4572e")}</g>`;
+  near.innerHTML = `<path d="M0 336 H1200 V360 H0Z" fill="#d9b48a"/>${shehnaiPlayers(160, 340)}${banana(40, 340, .8)}${welcomeGate(880, 1080, 340)}`;
 
-  // Hanging lamp for the festivities timeline
-  $("#lampSvg").innerHTML = `<defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#b8862e"/><stop offset=".5" stop-color="#ffe9a0"/><stop offset="1" stop-color="#b8862e"/></linearGradient></defs>
-    <path d="M20 0 v8" stroke="#9c7425" stroke-width="2"/><path d="M8 16 Q20 4 32 16Z" fill="url(#lg)"/>
-    <rect x="7" y="16" width="26" height="4" fill="#9c7425"/>
-    <path d="M8 20 h24 l-3 34 h-18z" fill="url(#lg)"/>
-    <path d="M14 24 h12 l-2 26 h-8z" fill="#fff4c4"/><path d="M20 30 q-4 6 0 12 q4 -6 0 -12" fill="#f08a24"/>
-    <path d="M10 54 h20 l-4 6 h-12z" fill="#9c7425"/><path d="M20 60 v8" stroke="#b0182e" stroke-width="3"/><circle cx="20" cy="72" r="4" fill="#b0182e"/>`;
+  // Brass temple bell that descends the festivities timeline
+  $("#lampSvg").innerHTML = `${defs}<circle cx="20" cy="6" r="5" fill="#f08a24"/>
+    <path d="M20 10 v6" stroke="#8a6420" stroke-width="2"/><path d="M8 54 C8 30 12 18 20 16 C28 18 32 30 32 54Z" fill="url(#brass)" stroke="#8a6420"/>
+    <rect x="5" y="52" width="30" height="5" rx="2" fill="#8a6420"/><circle cx="20" cy="62" r="4" fill="#8a6420"/>
+    <path d="M14 30 q6 4 12 0" stroke="#8a6420" fill="none"/>${swastik(20, 42, .45)}`;
 
   // Illustrated portraits shown until real photos are added
   function portrait(kind) {
@@ -227,7 +313,7 @@
   function renderFamily(list, target) {
     $(target).innerHTML = list.map(m => `
       <figure class="member px">
-        <div class="jharokha j-pink tall" data-open>
+        <div class="jharokha j-leaf tall" data-open>
           <div class="j-top"><span class="lotus"></span><span class="lotus"></span></div>
           <div class="j-window"><div class="j-content photo" data-src="${m.photo || ""}" data-a="${m.art || "man"}"></div><div class="shutter l"></div><div class="shutter r"></div></div>
         </div>
@@ -242,7 +328,7 @@
   /* ---------- Events ---------- */
   const icons = { tilakotsav: "🪔", tilak: "🪔", haldi: "🌼", mehndi: "🌿", sangeet: "🎶", "matru poojan": "🙏", "shubh vivah": "🔥", wedding: "🔥", "vadhu aagman": "🏡", reception: "✨" };
   const days = new Set(W.events.map(e => e.date)).size;
-  $("#eventsKicker").textContent = `${days} day${days > 1 ? "s" : ""} of celebration`;
+  $("#eventsKicker").textContent = `${days} days of celebration`;
   $("#timeline").insertAdjacentHTML("beforeend", W.events.map((e, i) => `
     <div class="event-row${i % 2 ? " alt" : ""}">
       <div class="scroll">
@@ -316,12 +402,14 @@
     cv.width = r.width * dpr; cv.height = r.height * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const g = ctx.createLinearGradient(0, 0, r.width, r.height);
-    g.addColorStop(0, "#e88a2a"); g.addColorStop(1, "#a8361a");
+    g.addColorStop(0, "#d6336c"); g.addColorStop(1, "#7b1424");
     ctx.fillStyle = g; ctx.fillRect(0, 0, r.width, r.height);
-    ctx.fillStyle = "rgba(255,255,255,.12)";
+    ctx.fillStyle = "rgba(246,193,43,.28)";
     for (let x = 10; x < r.width; x += 22) for (let y = 10; y < r.height; y += 22) { ctx.beginPath(); ctx.arc(x, y, 2, 0, 7); ctx.fill(); }
     ctx.fillStyle = "#fff3cf"; ctx.textAlign = "center"; ctx.font = "600 15px Cinzel, serif";
-    ctx.fillText("✦  SCRATCH HERE  ✦", r.width / 2, r.height / 2 + 5);
+    ctx.fillText("✦  SCRATCH HERE  ✦", r.width / 2, r.height / 2 + 14);
+    ctx.font = "22px 'Tiro Devanagari Hindi', serif";
+    ctx.fillText("यहाँ खुरचें", r.width / 2, r.height / 2 - 10);
   }
   function finishScratch() {
     if (scratched) return;
