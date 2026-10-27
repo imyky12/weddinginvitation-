@@ -335,14 +335,14 @@
         <span class="tassel l"></span><span class="tassel r"></span>
         <div class="rod"></div>
         <div class="scroll-body">
-          <div class="parchment">
+          <div class="parchment"><div class="parchment-in">
             <div class="emoji">${icons[e.name.toLowerCase()] || "❖"}</div>
             ${e.hindi ? `<p class="hi">${e.hindi}</p>` : ""}
             <h3>${e.name.toUpperCase()}</h3>
             ${e.note ? `<p class="note">${e.note}</p>` : ""}
             <ul><li>${e.day ? e.day + ", " : ""}${e.date}</li>${e.time ? `<li>${e.time}</li>` : ""}<li>${e.venue}</li></ul>
             ${e.map ? `<a target="_blank" rel="noopener" href="${e.map.startsWith("http") ? e.map : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.map)}`}">View Map</a>` : ""}
-          </div>
+          </div></div>
           <div class="rod"></div>
         </div>
       </div>
