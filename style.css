@@ -15,12 +15,16 @@
   --muted: #8a6b5c;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+/* Decorations (mandalas, petals, clouds) poke past the edges; clip them so phones don't widen the page */
+html { overflow-x: hidden; overflow-x: clip; }
 body {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: 18px;
   color: var(--ink);
   background: var(--cream);
   overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100%;
   line-height: 1.6;
 }
 body.locked { overflow: hidden; height: 100vh; }
@@ -99,7 +103,7 @@ button { font: inherit; }
 @keyframes pulse { 50% { opacity: .45; } }
 
 /* ================= Ambient ================= */
-#petals { position: fixed; inset: 0; pointer-events: none; z-index: 60; overflow: hidden; }
+#petals { position: fixed; inset: 0; pointer-events: none; z-index: 60; overflow: hidden; contain: strict; }
 .petal {
   position: absolute; top: -30px; width: 12px; height: 16px; opacity: .85;
   background: linear-gradient(135deg, #f7a0a0, #d8485c);

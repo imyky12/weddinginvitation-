@@ -385,7 +385,7 @@
     const hr = hero.getBoundingClientRect();
     const p = clamp(-hr.top / (hr.height - vh));
     heroText.style.transform = `translateY(${-p * 45}vh)`;
-    heroText.style.opacity = clamp(1 - p * 2.2);
+    heroText.style.opacity = clamp(1 - p * 1.6);
     sky.style.transform = `translateY(${-p * 6}vh) scale(${1 + p * 0.15})`;
     palace.style.transform = `translateY(${-p * 16}vh) scale(${1 + p * 2.2})`;
     const f = ease(clamp((p - 0.28) / 0.62));
@@ -446,7 +446,7 @@
   function demoNudge() {
     if (userScrolled) return;
     autoScrolling = true;
-    scrollTo({ top: innerHeight * 0.45, behavior: "smooth" });
+    scrollTo({ top: innerHeight * 0.25, behavior: "smooth" });
     setTimeout(() => (autoScrolling = false), 1500);
   }
 
