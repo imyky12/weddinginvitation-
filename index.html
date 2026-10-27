@@ -8,27 +8,36 @@
 <meta name="theme-color" content="#4a0b15">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="locked">
 
-<!-- 1. Palace gate intro -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <clipPath id="ogee" clipPathUnits="objectBoundingBox">
+    <path d="M0,1 V0.42 C0,0.24 0.32,0.16 0.5,0 C0.68,0.16 1,0.24 1,0.42 V1 Z"/>
+  </clipPath>
+</svg>
+
+<!-- 1. Palace gate -->
 <div id="gate" role="button" tabindex="0" aria-label="Tap to open the invitation">
   <div class="gate-scene">
     <div class="mural-arch">
       <svg class="peacocks" viewBox="40 0 520 240" aria-hidden="true" id="peacockSvg"></svg>
+      <div class="door-frame"></div>
       <div class="doorway">
         <div class="glow"></div>
         <div class="door left"><span class="knocker"></span></div>
         <div class="door right"><span class="knocker"></span></div>
       </div>
+      <div class="gate-label">
+        <p class="small-caps">The wedding of</p>
+        <p class="gate-names" data-cfg="coupleShort"></p>
+      </div>
     </div>
-    <p class="gate-names" data-cfg="coupleShort"></p>
     <p class="gate-tap">Tap to open the gates</p>
   </div>
 </div>
-<div id="flash"></div>
 
 <div id="petals" aria-hidden="true"></div>
 <div class="mandala-bg left" aria-hidden="true"></div>
@@ -37,26 +46,26 @@
 <audio id="bgm" loop preload="none"></audio>
 
 <main>
-  <!-- 2. Names over sunset palace -->
+  <!-- 2. Names, sunset palace, zoom into the haveli (pinned while scrolling) -->
   <section id="hero">
-    <div class="sky"></div>
-    <div class="sun"></div>
-    <div class="hero-text">
-      <p class="script small-script">Shubh Vivah</p>
-      <h1 class="hero-names">
-        <span class="letters" data-cfg="groom"></span>
-        <span class="script amp">&amp;</span>
-        <span class="letters" data-cfg="bride"></span>
-      </h1>
+    <div class="stage">
+      <div class="sky"><i class="cloud c1"></i><i class="cloud c2"></i><i class="cloud c3"></i><i class="cloud c4"></i></div>
+      <div class="sun"></div>
+      <div class="hero-text">
+        <p class="script small-script">Shubh Vivah</p>
+        <h1 class="names-a"><span data-cfg="groom"></span><span class="script amp">&amp;</span><span data-cfg="bride"></span></h1>
+        <h1 class="names-b" aria-hidden="true"><span data-cfg="groomCaps"></span><span class="script amp">&amp;</span><span data-cfg="brideCaps"></span></h1>
+      </div>
+      <svg class="palace" id="palaceSvg" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
+      <svg class="facade" id="facadeSvg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
+      <p class="scroll-cue">Scroll</p>
     </div>
-    <svg class="palace" id="palaceSvg" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
   </section>
 
-  <!-- 3. Haveli band + jharokha date reveal -->
-  <div class="haveli-band" id="haveliBand" aria-hidden="true"></div>
+  <!-- 3. Jharokha date reveal -->
   <section id="date">
-    <div class="jharokha j-orange reveal" data-open>
-      <div class="j-top"><span class="lotus">✿</span><span class="lotus">✿</span></div>
+    <div class="jharokha j-orange wide px" data-open>
+      <div class="j-top"><span class="lotus"></span><span class="lotus"></span></div>
       <div class="j-window">
         <div class="j-content date-card">
           <p class="cinzel" data-cfg="dateLong"></p>
@@ -67,62 +76,68 @@
     </div>
   </section>
 
-  <!-- 4. Invitation + countdown -->
+  <!-- 4. Blessings, invitation, countdown -->
   <section id="invite">
-    <div class="medallion reveal" aria-hidden="true"></div>
-    <p class="script heading-script reveal">Together with their families</p>
-    <p class="invite-text reveal" data-cfg="invitationText"></p>
-    <p class="script heading-script reveal">Counting the moments</p>
-    <div class="countdown reveal">
-      <div class="tile t1"><div class="t-in"><span id="cd-d">00</span></div><small>Days</small></div>
-      <div class="tile t2"><div class="t-in"><span id="cd-h">00</span></div><small>Hours</small></div>
-      <div class="tile t3"><div class="t-in"><span id="cd-m">00</span></div><small>Minutes</small></div>
-      <div class="tile t4"><div class="t-in"><span id="cd-s">00</span></div><small>Seconds</small></div>
+    <div class="medallion px" aria-hidden="true"></div>
+    <p class="hindi ganesh px">॥ श्री गणेशाय नमः ॥</p>
+    <p class="hindi shloka px" data-cfg="shloka"></p>
+    <p class="script heading-script px">Together with their families</p>
+    <p class="invite-text words" data-cfg="invitationText"></p>
+    <p class="script heading-script px">Counting the moments</p>
+    <div class="countdown">
+      <div class="tile t1 px"><div class="t-in"><span id="cd-d">00</span></div><small>Days</small></div>
+      <div class="tile t2 px"><div class="t-in"><span id="cd-h">00</span></div><small>Hours</small></div>
+      <div class="tile t3 px"><div class="t-in"><span id="cd-m">00</span></div><small>Minutes</small></div>
+      <div class="tile t4 px"><div class="t-in"><span id="cd-s">00</span></div><small>Seconds</small></div>
     </div>
   </section>
 
   <!-- 5. Scratch card -->
   <section id="save">
-    <div class="paper-card reveal">
+    <div class="paper-card px">
       <h2 class="cinzel">Save the Date</h2>
       <p class="hint">Scratch the card below to reveal it</p>
       <div class="scratch">
         <div class="scratch-under">
           <p class="cinzel">We're Getting Married!</p>
-          <p class="serif-lg" data-cfg="dateLong"></p>
+          <p class="serif-lg" data-cfg="dateShort"></p>
           <p class="hint" data-cfg="timeText"></p>
+          <p class="hint tiny">Save the date and join us in celebration</p>
         </div>
         <canvas id="scratchCanvas" aria-label="Scratch card"></canvas>
+        <button class="reveal-btn" id="revealBtn" type="button">Reveal</button>
       </div>
     </div>
   </section>
 
   <!-- 6. Royal couple -->
   <section id="couple">
-    <p class="script heading-script reveal">With the blessings of our elders</p>
-    <h2 class="cinzel title reveal">The Royal Couple</h2>
-    <div class="ornament reveal"></div>
+    <p class="script heading-script px">With the blessings of our elders</p>
+    <h2 class="cinzel title px">The Royal Couple</h2>
+    <div class="ornament px"></div>
     <div class="couple-grid">
-      <figure class="person reveal">
+      <figure class="person px" data-tilt="1">
         <div class="jharokha j-orange tall" data-open>
-          <div class="j-top"><span class="lotus">✿</span><span class="lotus">✿</span></div>
-          <div class="j-window"><div class="j-content photo" data-photo="groomPhoto" data-initial="groom"></div><div class="shutter l"></div><div class="shutter r"></div></div>
+          <div class="j-top"><span class="lotus"></span><span class="lotus"></span></div>
+          <div class="j-window"><div class="j-content photo" data-photo="groomPhoto" data-art="groom"></div><div class="shutter l"></div><div class="shutter r"></div></div>
         </div>
         <figcaption>
           <span class="script role">The Groom</span>
           <span class="cinzel pname" data-cfg="groomFull"></span>
           <span class="parents" data-cfg="groomParents"></span>
+          <span class="parents" data-cfg="groomGrandparents"></span>
         </figcaption>
       </figure>
-      <figure class="person reveal">
+      <figure class="person px" data-tilt="-1">
         <div class="jharokha j-blue tall" data-open>
-          <div class="j-top"><span class="lotus">✿</span><span class="lotus">✿</span></div>
-          <div class="j-window"><div class="j-content photo" data-photo="bridePhoto" data-initial="bride"></div><div class="shutter l"></div><div class="shutter r"></div></div>
+          <div class="j-top"><span class="lotus"></span><span class="lotus"></span></div>
+          <div class="j-window"><div class="j-content photo" data-photo="bridePhoto" data-art="bride"></div><div class="shutter l"></div><div class="shutter r"></div></div>
         </div>
         <figcaption>
           <span class="script role">The Bride</span>
           <span class="cinzel pname" data-cfg="brideFull"></span>
           <span class="parents" data-cfg="brideParents"></span>
+          <span class="parents" data-cfg="brideGrandparents"></span>
         </figcaption>
       </figure>
     </div>
@@ -130,41 +145,53 @@
 
   <!-- 7. Family -->
   <section id="family">
-    <p class="script heading-script reveal">With love and blessings</p>
-    <h2 class="cinzel title reveal">Our Family</h2>
-    <div class="ornament reveal"></div>
-    <h3 class="script side-title reveal">The Groom's Family</h3>
+    <p class="script heading-script px">With love and blessings</p>
+    <h2 class="cinzel title px">Our Family</h2>
+    <div class="ornament px"></div>
+    <h3 class="script side-title px">The Groom's Family</h3>
     <div class="family-grid" id="familyGroom"></div>
-    <h3 class="script side-title reveal">The Bride's Family</h3>
+    <h3 class="script side-title px">The Bride's Family</h3>
     <div class="family-grid" id="familyBride"></div>
+    <div class="kids px">
+      <span class="label">Bal Manuhar</span>
+      <p class="hindi couplet" data-cfg="kidsCouplet"></p>
+      <p class="script kid-names" data-cfg="kidsNames"></p>
+    </div>
   </section>
 
   <!-- 8. Festivities -->
   <section id="events">
-    <p class="script heading-script reveal" id="eventsKicker"></p>
-    <h2 class="cinzel title reveal">The Royal Festivities</h2>
-    <div class="ornament reveal"></div>
-    <div class="timeline" id="timeline"></div>
+    <p class="script heading-script px" id="eventsKicker"></p>
+    <h2 class="cinzel title px">The Royal Festivities</h2>
+    <div class="ornament px"></div>
+    <div class="timeline" id="timeline">
+      <div class="lamp-string" id="lampString"></div>
+      <div class="lamp" id="lamp" aria-hidden="true"><svg viewBox="0 0 40 80" id="lampSvg"></svg></div>
+    </div>
   </section>
 
   <!-- 9. Gallery -->
   <section id="gallery">
-    <p class="script heading-script reveal">Moments to treasure</p>
-    <h2 class="cinzel title reveal">Royal Gallery</h2>
-    <div class="ornament reveal"></div>
-    <div class="carousel reveal" id="carousel">
+    <p class="script heading-script px">Moments to treasure</p>
+    <h2 class="cinzel title px">Royal Gallery</h2>
+    <div class="ornament px"></div>
+    <div class="carousel px" id="carousel">
       <div class="track" id="track"></div>
       <div class="ribbon" id="caption"></div>
-      <div class="dots" id="dots"></div>
+      <div class="thumbs">
+        <button class="nav" id="prev" aria-label="Previous photo">‹</button>
+        <div class="thumb-row" id="thumbs"></div>
+        <button class="nav" id="next" aria-label="Next photo">›</button>
+      </div>
     </div>
   </section>
 
   <!-- 10. Venue -->
   <section id="venue">
-    <p class="script heading-script reveal">Where hearts unite</p>
-    <h2 class="cinzel title reveal">The Venue</h2>
-    <div class="ornament reveal"></div>
-    <div class="royal-card venue-card reveal">
+    <p class="script heading-script px">Where hearts unite</p>
+    <h2 class="cinzel title px">The Venue</h2>
+    <div class="ornament px"></div>
+    <div class="royal-card venue-card px" data-flat>
       <div class="venue-info">
         <p class="script join">Join us at</p>
         <h3 class="cinzel venue-name" data-cfg="venueName"></h3>
@@ -173,6 +200,7 @@
           <li><span class="ic">▦</span><div><small>Date</small><span data-cfg="dateLong"></span></div></li>
           <li><span class="ic">◷</span><div><small>Time</small><span data-cfg="timeText"></span></div></li>
         </ul>
+        <p class="venue-note" data-cfg="venueNote"></p>
         <a class="gold-btn" id="directions" target="_blank" rel="noopener">➤ Get Directions</a>
       </div>
       <iframe class="map" id="map" loading="lazy" title="Venue map" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -181,23 +209,28 @@
 
   <!-- 11. RSVP -->
   <section id="rsvp">
-    <p class="script heading-script reveal">Kindly respond</p>
-    <h2 class="cinzel title reveal">RSVP</h2>
-    <div class="ornament reveal"></div>
-    <form class="royal-card rsvp-card reveal" id="rsvpForm">
+    <p class="script heading-script px">Kindly respond</p>
+    <h2 class="cinzel title px">RSVP</h2>
+    <div class="ornament px"></div>
+    <form class="royal-card rsvp-card px" id="rsvpForm" data-flat>
       <div class="seal" aria-hidden="true" data-cfg="initials"></div>
-      <label>Your name<input name="name" required autocomplete="name"></label>
-      <label>Number of guests<input name="guests" type="number" min="1" value="1" required></label>
-      <label>Will you attend?
-        <select name="attending"><option>Joyfully accepts</option><option>Regretfully declines</option></select>
-      </label>
+      <p class="script will">Will you join us?</p>
+      <p class="small-caps gold-text" data-cfg="dateShort"></p>
+      <label class="field">Your name<input name="name" required autocomplete="name" placeholder="Full name"></label>
+      <div class="choice" role="radiogroup" aria-label="Will you attend?">
+        <button type="button" class="opt on" data-v="Joyfully accepts">♥ Joyfully Accept</button>
+        <button type="button" class="opt" data-v="Regretfully declines">Regretfully Decline</button>
+      </div>
+      <div class="field guests">Number of guests
+        <div class="stepper"><button type="button" id="minus" aria-label="Fewer guests">−</button><output id="guests">1</output><button type="button" id="plus" aria-label="More guests">+</button></div>
+      </div>
       <button class="gold-btn wide" type="submit">Send RSVP</button>
     </form>
   </section>
 
   <!-- 12. Wishes wall -->
   <section id="wishes">
-    <div class="paper-card wishes-card reveal">
+    <div class="paper-card wishes-card px">
       <h2 class="cinzel">Wishes Wall</h2>
       <div class="wish-list" id="wishList"></div>
       <form id="wishForm" class="wish-form">
@@ -210,12 +243,21 @@
 
   <!-- 13. Closing -->
   <section id="closing">
-    <div class="medallion reveal" aria-hidden="true"></div>
-    <p class="script heading-script reveal">We await your gracious presence</p>
-    <h2 class="cinzel closing-names reveal" data-cfg="coupleCaps"></h2>
-    <p class="hashtag reveal" data-cfg="hashtag"></p>
+    <div class="medallion px" aria-hidden="true"></div>
+    <p class="script heading-script px">We await your gracious presence</p>
+    <h2 class="cinzel closing-names px" data-cfg="coupleCaps"></h2>
+    <p class="hashtag px" data-cfg="hashtag"></p>
+    <div class="hosts px">
+      <div><small>With best compliments</small><span data-cfg="hostFamily"></span></div>
+      <div><small>Vineet</small><span data-cfg="hostInviter"></span></div>
+    </div>
+    <div class="contacts px" id="contacts"></div>
   </section>
-  <svg class="desert" id="desertSvg" viewBox="0 0 1200 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
+  <div class="desert" id="desert" aria-hidden="true">
+    <svg class="d-layer far" viewBox="0 0 1200 360" preserveAspectRatio="xMidYMax slice"></svg>
+    <svg class="d-layer mid" viewBox="0 0 1200 360" preserveAspectRatio="xMidYMax slice"></svg>
+    <svg class="d-layer near" viewBox="0 0 1200 360" preserveAspectRatio="xMidYMax slice"></svg>
+  </div>
 </main>
 
 <script src="config.js"></script>
